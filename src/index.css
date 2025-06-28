@@ -1,0 +1,29 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0b0c26;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  overflow: hidden; /* Prevent scrollbars on the landing page */
+}
+
+/* Animated starfield background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image:
+    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(114, 9, 183, 0.3), transparent),
+    radial-gradient(ellipse 80% 80% at 10% -15%, rgba(58, 12, 163, 0.25), transparent),
+    radial-gradient(ellipse 80% 80% at 90% -15%, rgba(29, 53, 87, 0.25), transparent);
+  background-size: 200% 200%;
+  animation: background-pan 30s ease-in-out infinite;
+}
