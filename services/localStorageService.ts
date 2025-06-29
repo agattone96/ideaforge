@@ -1,10 +1,11 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { Project, Idea, SampleProject, Attachment } from '../types';
+import { API_KEY } from '../src/utils/env';
 
 // Initialize Gemini AI Client
 let ai: GoogleGenAI | null = null;
 try {
-  const apiKey = process.env.API_KEY;
+  const apiKey = API_KEY;
 
   if (apiKey) {
     ai = new GoogleGenAI({ apiKey });
