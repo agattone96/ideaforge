@@ -1,6 +1,6 @@
 // hooks/useTheme.ts
 import { useState, useEffect, useCallback } from 'react';
-import { themes, ThemeName, ThemeProperties } from '../styles/theme'; // Updated import path
+import { themes, ThemeName } from '../styles/theme';
 
 const THEME_STORAGE_KEY = 'ideaforge-ascension-theme';
 
