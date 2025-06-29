@@ -1,5 +1,3 @@
-
-
 export interface Attachment {
   id: string;
   name: string;
@@ -42,11 +40,13 @@ export interface NotificationType {
 }
 
 // For sample project data structure (optional, can be inline)
-export interface SampleIdea extends Omit<Idea, 'id' | 'createdAt' | 'updatedAt' | 'attachments' | 'logo'> {
+export interface SampleIdea
+  extends Omit<Idea, 'id' | 'createdAt' | 'updatedAt' | 'attachments' | 'logo'> {
   attachments?: Omit<Attachment, 'id'>[];
   logo?: string; // Optional: Base64 string for sample blueprint logo
 }
-export interface SampleProject extends Omit<Project, 'id' | 'createdAt' | 'ideas' | 'isFavorite' | 'attachments' | 'logo'> {
+export interface SampleProject
+  extends Omit<Project, 'id' | 'createdAt' | 'ideas' | 'isFavorite' | 'attachments' | 'logo'> {
   ideas: SampleIdea[];
   attachments?: Omit<Attachment, 'id'>[]; // Sample project can also have attachments
   logo?: string;

@@ -1,5 +1,3 @@
-
-
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import {
   generateMarkdownContent,
@@ -23,23 +21,29 @@ Object.defineProperty(window, 'JSZip', {
     file: mockZipFile,
     folder: mockZipFolder,
     generateAsync: mockZipGenerateAsync,
-    loadAsync: mockZipLoadAsync, 
+    loadAsync: mockZipLoadAsync,
   })),
-  writable: true, 
+  writable: true,
 });
-
 
 // Mock Blob and URL.createObjectURL/revokeObjectURL
 // @ts-ignore
 globalThis.Blob = jest.fn((content?: BlobPart[], options?: BlobPropertyBag) => ({
   content,
   options,
-  size: content && Array.isArray(content) && typeof content[0] === 'string' ? (content[0] as string).length : 0,
+  size:
+    content && Array.isArray(content) && typeof content[0] === 'string'
+      ? (content[0] as string).length
+      : 0,
   type: options?.type || '',
   arrayBuffer: jest.fn<() => Promise<ArrayBuffer>>().mockResolvedValue(new ArrayBuffer(0)),
   slice: jest.fn(),
   stream: jest.fn(),
-  text: jest.fn<() => Promise<string>>().mockResolvedValue(content && Array.isArray(content) && typeof content[0] === 'string' ? content[0] : ''),
+  text: jest
+    .fn<() => Promise<string>>()
+    .mockResolvedValue(
+      content && Array.isArray(content) && typeof content[0] === 'string' ? content[0] : ''
+    ),
 })) as unknown as typeof Blob; // Cast to actual Blob type for tsc
 URL.createObjectURL = jest.fn(() => 'mock-url');
 URL.revokeObjectURL = jest.fn();
@@ -61,7 +65,6 @@ Object.defineProperty(document, 'createElement', {
 Object.defineProperty(document.body, 'appendChild', { value: mockAppendChild, writable: true });
 Object.defineProperty(document.body, 'removeChild', { value: mockRemoveChild, writable: true });
 
-
 const sampleIdea: Idea = {
   id: 'idea1',
   title: 'My Awesome Idea!',
@@ -71,8 +74,22 @@ const sampleIdea: Idea = {
   targetAudience: 'Everyone',
   inspirationNotes: 'Cookies are great.',
   attachments: [
-    { id: 'att1', name: 'logo with space.png', type: 'image', mimeType: 'image/png', content: 'base64imagestring', size: 1024 },
-    { id: 'att2', name: 'notes <unsafe>.txt', type: 'text', mimeType: 'text/plain', content: 'Some text notes.', size: 512 },
+    {
+      id: 'att1',
+      name: 'logo with space.png',
+      type: 'image',
+      mimeType: 'image/png',
+      content: 'base64imagestring',
+      size: 1024,
+    },
+    {
+      id: 'att2',
+      name: 'notes <unsafe>.txt',
+      type: 'text',
+      mimeType: 'text/plain',
+      content: 'Some text notes.',
+      size: 512,
+    },
   ],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
@@ -82,7 +99,7 @@ const sampleProject: Project = {
   id: 'proj1',
   name: 'Cookie Project / Division',
   ideas: [sampleIdea],
-  attachments: [], 
+  attachments: [],
   createdAt: new Date().toISOString(),
   isFavorite: false,
 };
@@ -91,13 +108,15 @@ const sampleProject: Project = {
 const mockFileReaderInstance = {
   onload: null as ((event: ProgressEvent<FileReader>) => void) | null,
   onerror: null as ((event: ProgressEvent<FileReader>) => void) | null,
-  readAsText: jest.fn(function(this: FileReader, blob: Blob) { // Takes Blob/File
+  readAsText: jest.fn(function (this: FileReader, blob: Blob) {
+    // Takes Blob/File
     // @ts-ignore
     this.result = (blob as any)._customContent || 'hello world'; // Simulate reading content
     // @ts-ignore
     if (this.onload) this.onload({ target: this } as ProgressEvent<FileReader>);
   }),
-  readAsDataURL: jest.fn(function(this: FileReader, blob: Blob) { // Takes Blob/File
+  readAsDataURL: jest.fn(function (this: FileReader, blob: Blob) {
+    // Takes Blob/File
     // @ts-ignore
     this.result = (blob as any)._customBase64Content || 'data:image/png;base64,ZGF0YQ==';
     // @ts-ignore
@@ -108,8 +127,9 @@ const mockFileReaderInstance = {
 };
 
 // Mock the global FileReader constructor to return our mock instance
-(globalThis as any).FileReader = jest.fn(() => mockFileReaderInstance) as unknown as typeof FileReader;
-
+(globalThis as any).FileReader = jest.fn(
+  () => mockFileReaderInstance
+) as unknown as typeof FileReader;
 
 describe('fileService', () => {
   beforeEach(() => {
@@ -129,11 +149,21 @@ describe('fileService', () => {
       expect(markdown).toContain(`# ${sampleIdea.title}`);
       expect(markdown).toContain(`## Problem Solved:\n${sampleIdea.problemSolved}`);
       expect(markdown).toContain(`![logo with space.png](./attachments/logo_with_space.png)`);
-      expect(markdown).toContain(`- notes <unsafe>.txt (type: text, size: 0 KB) - See ./attachments/notes_unsafe_.txt`);
+      expect(markdown).toContain(
+        `- notes <unsafe>.txt (type: text, size: 0 KB) - See ./attachments/notes_unsafe_.txt`
+      );
     });
 
-     test('should handle missing fields gracefully', () => {
-      const minimalIdea: Idea = { ...sampleIdea, problemSolved: '', coreSolution: '', keyFeatures: '', targetAudience:'', inspirationNotes: '', attachments: [] };
+    test('should handle missing fields gracefully', () => {
+      const minimalIdea: Idea = {
+        ...sampleIdea,
+        problemSolved: '',
+        coreSolution: '',
+        keyFeatures: '',
+        targetAudience: '',
+        inspirationNotes: '',
+        attachments: [],
+      };
       const markdown = generateMarkdownContent(minimalIdea);
       expect(markdown).toContain(`## Problem Solved:\nN/A`);
       expect(markdown).not.toContain(`## Attachments:`);
@@ -142,13 +172,15 @@ describe('fileService', () => {
 
   describe('sanitizeFilename', () => {
     test('should replace invalid characters with underscores', () => {
-      expect(sanitizeFilename('file/name*with?chars"<>|#%&{}.txt')).toBe('file_name_with_chars_.txt');
+      expect(sanitizeFilename('file/name*with?chars"<>|#%&{}.txt')).toBe(
+        'file_name_with_chars_.txt'
+      );
     });
     test('should replace multiple spaces with a single underscore', () => {
       expect(sanitizeFilename('file  with   spaces.txt')).toBe('file_with_spaces.txt');
     });
     test('should truncate long filenames', () => {
-      const longName = `${'a'.repeat(150)  }.txt`;
+      const longName = `${'a'.repeat(150)}.txt`;
       expect(sanitizeFilename(longName).length).toBe(100 + 4); // 100 for name + .txt
     });
   });
@@ -163,11 +195,13 @@ describe('fileService', () => {
       const ideaNoAttachments = { ...sampleIdea, attachments: [] };
       await exportIdea(ideaNoAttachments);
 
-      expect(globalThis.Blob).toHaveBeenCalledWith([expect.any(String)], { type: 'text/markdown;charset=utf-8' }); 
+      expect(globalThis.Blob).toHaveBeenCalledWith([expect.any(String)], {
+        type: 'text/markdown;charset=utf-8',
+      });
       expect(mockLinkClick).toHaveBeenCalled();
       expect(URL.createObjectURL).toHaveBeenCalled();
       expect(URL.revokeObjectURL).toHaveBeenCalled();
-      
+
       // @ts-ignore
       window.JSZip = originalJSZip; // Restore JSZip
     });
@@ -212,7 +246,9 @@ describe('fileService', () => {
       const originalJSZip = window.JSZip;
       // @ts-ignore
       window.JSZip = undefined;
-      await expect(exportProjectAsZip(sampleProject)).rejects.toThrow('JSZip library is not available.');
+      await expect(exportProjectAsZip(sampleProject)).rejects.toThrow(
+        'JSZip library is not available.'
+      );
       // @ts-ignore
       window.JSZip = originalJSZip;
     });
@@ -222,26 +258,28 @@ describe('fileService', () => {
     test('should read file as text successfully', async () => {
       const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' });
       // @ts-ignore Add custom property for mock content
-      (file as any)._customContent = 'hello world'; 
-      
+      (file as any)._customContent = 'hello world';
+
       const content = await readFileAsText(file);
       expect(content).toBe('hello world');
       expect(mockFileReaderInstance.readAsText).toHaveBeenCalledWith(file);
     });
 
     test('should reject on file read error (text)', async () => {
-        const file = new File([''], 'error.txt', { type: 'text/plain' });
-        const mockError = new DOMException("Test read error");
-        
-        // Configure the mock instance for error
-        mockFileReaderInstance.readAsText.mockImplementationOnce(function(this: FileReader) {
-            // @ts-ignore
-            this.error = mockError;
-            // @ts-ignore
-            if (this.onerror) this.onerror({ target: this } as ProgressEvent<FileReader>);
-        });
+      const file = new File([''], 'error.txt', { type: 'text/plain' });
+      const mockError = new DOMException('Test read error');
 
-        await expect(readFileAsText(file)).rejects.toThrow('Failed to read file "error.txt" as text: Test read error');
+      // Configure the mock instance for error
+      mockFileReaderInstance.readAsText.mockImplementationOnce(function (this: FileReader) {
+        // @ts-ignore
+        this.error = mockError;
+        // @ts-ignore
+        if (this.onerror) this.onerror({ target: this } as ProgressEvent<FileReader>);
+      });
+
+      await expect(readFileAsText(file)).rejects.toThrow(
+        'Failed to read file "error.txt" as text: Test read error'
+      );
     });
   });
 

@@ -1,6 +1,7 @@
-
-
-import { GenerateContentResponse as GenAIResponse, GenerateContentParameters as GenAIParameters } from '@google/genai';
+import {
+  GenerateContentResponse as GenAIResponse,
+  GenerateContentParameters as GenAIParameters,
+} from '@google/genai';
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import * as localStorageServiceOriginal from './localStorageService'; // Adjust path
 import { Project, Idea } from '../types'; // Adjust path
@@ -29,7 +30,6 @@ const act = async (callback: () => any) => {
   await Promise.resolve(callback()).then(() => {});
 };
 
-
 describe('localStorageService', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -47,51 +47,56 @@ describe('localStorageService', () => {
     });
 
     test('should return result on first successful attempt', async () => {
-      successfulAsyncFn.mockResolvedValueOnce("success");
-      const result = await localStorageServiceOriginal.withRetries(successfulAsyncFn, "TestOpSuccess");
-      expect(result).toBe("success");
+      successfulAsyncFn.mockResolvedValueOnce('success');
+      const result = await localStorageServiceOriginal.withRetries(
+        successfulAsyncFn,
+        'TestOpSuccess'
+      );
+      expect(result).toBe('success');
       expect(successfulAsyncFn).toHaveBeenCalledTimes(1);
     });
 
     test('should retry on failure and succeed eventually', async () => {
       failingAsyncFn
-        .mockRejectedValueOnce(new Error("Fail 1"))
-        .mockRejectedValueOnce(new Error("Fail 2"))
-        .mockResolvedValueOnce("success after retries");
+        .mockRejectedValueOnce(new Error('Fail 1'))
+        .mockRejectedValueOnce(new Error('Fail 2'))
+        .mockResolvedValueOnce('success after retries');
 
-      const result = await localStorageServiceOriginal.withRetries(failingAsyncFn, "TestOpRetrySuccess");
-      expect(result).toBe("success after retries");
+      const result = await localStorageServiceOriginal.withRetries(
+        failingAsyncFn,
+        'TestOpRetrySuccess'
+      );
+      expect(result).toBe('success after retries');
       expect(failingAsyncFn).toHaveBeenCalledTimes(3);
     });
 
     test('should throw error after all retries fail', async () => {
       failingAsyncFn
-        .mockRejectedValueOnce(new Error("Fail 1"))
-        .mockRejectedValueOnce(new Error("Fail 2"))
-        .mockRejectedValueOnce(new Error("Fail 3 Final"));
+        .mockRejectedValueOnce(new Error('Fail 1'))
+        .mockRejectedValueOnce(new Error('Fail 2'))
+        .mockRejectedValueOnce(new Error('Fail 3 Final'));
 
-      await expect(localStorageServiceOriginal.withRetries(failingAsyncFn, "TestOpRetryFail"))
-        .rejects.toThrow("Fail 3 Final");
+      await expect(
+        localStorageServiceOriginal.withRetries(failingAsyncFn, 'TestOpRetryFail')
+      ).rejects.toThrow('Fail 3 Final');
       expect(failingAsyncFn).toHaveBeenCalledTimes(3); // Max retries is 3
     });
-     
+
     test('should use exponential backoff delay (mocking setTimeout)', async () => {
       jest.useFakeTimers();
-      failingAsyncFn
-        .mockRejectedValueOnce(new Error("Fail 1"))
-        .mockResolvedValueOnce("success");
+      failingAsyncFn.mockRejectedValueOnce(new Error('Fail 1')).mockResolvedValueOnce('success');
 
-      const promise = localStorageServiceOriginal.withRetries(failingAsyncFn, "TestOpDelay");
-      
+      const promise = localStorageServiceOriginal.withRetries(failingAsyncFn, 'TestOpDelay');
+
       expect(failingAsyncFn).toHaveBeenCalledTimes(1);
-      
+
       // Fast-forward time for the first delay (500ms)
       await act(async () => {
-        jest.advanceTimersByTime(500); 
+        jest.advanceTimersByTime(500);
       });
-      
+
       expect(failingAsyncFn).toHaveBeenCalledTimes(2);
-      
+
       await act(async () => {
         await promise; // Allow the promise to resolve
       });
@@ -99,7 +104,6 @@ describe('localStorageService', () => {
       jest.useRealTimers();
     });
   });
-
 
   describe('Project CRUD', () => {
     test('should create a new project', () => {
@@ -117,9 +121,9 @@ describe('localStorageService', () => {
       localStorageServiceOriginal.createProject('Project B');
       const projectA = localStorageServiceOriginal.createProject('Project A'); // Created later, but will be favorited
       localStorageServiceOriginal.createProject('Project C');
-      
+
       localStorageServiceOriginal.toggleFavoriteProject(projectA.id);
-      
+
       const projects = localStorageServiceOriginal.getProjects();
       expect(projects).toHaveLength(3);
       expect(projects[0].name).toBe('Project A'); // Favorited should be first
@@ -137,7 +141,12 @@ describe('localStorageService', () => {
 
     test('should update a project', () => {
       const project = localStorageServiceOriginal.createProject('Initial Name');
-      const updatedProjectData: Project = { ...project, name: 'Updated Name', isFavorite: true, attachments: [] };
+      const updatedProjectData: Project = {
+        ...project,
+        name: 'Updated Name',
+        isFavorite: true,
+        attachments: [],
+      };
       localStorageServiceOriginal.updateProject(updatedProjectData);
       const retrievedProject = localStorageServiceOriginal.getProjectById(project.id);
       expect(retrievedProject?.name).toBe('Updated Name');
@@ -148,7 +157,7 @@ describe('localStorageService', () => {
       const project = localStorageServiceOriginal.createProject('To Delete');
       localStorageServiceOriginal.deleteProject(project.id);
       const projects = localStorageServiceOriginal.getProjects();
-      expect(projects.find(p => p.id === project.id)).toBeUndefined();
+      expect(projects.find((p) => p.id === project.id)).toBeUndefined();
     });
 
     test('should toggle favorite status of a project', () => {
@@ -169,19 +178,19 @@ describe('localStorageService', () => {
       const project = localStorageServiceOriginal.createProject('Project With Ideas');
       projectId = project.id;
     });
-    
+
     const createFullIdea = (ideaData: Partial<Idea>): Idea => ({
-        id: crypto.randomUUID(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        attachments: [],
-        title: 'Default Title',
-        problemSolved: '',
-        coreSolution: '',
-        keyFeatures: '',
-        targetAudience: '',
-        inspirationNotes: '',
-        ...ideaData,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      attachments: [],
+      title: 'Default Title',
+      problemSolved: '',
+      coreSolution: '',
+      keyFeatures: '',
+      targetAudience: '',
+      inspirationNotes: '',
+      ...ideaData,
     });
 
     test('should add an idea to a project', () => {
@@ -216,64 +225,87 @@ describe('localStorageService', () => {
 
   describe('AI Feature Functions', () => {
     test('generateIdeaBoilerplate should call AI and parse JSON', async () => {
-        const mockResponse = {
-            text: '```json\n{"problemSolved": "test problem", "coreSolution": "test solution", "keyFeatures": "- f1", "targetAudience": "test audience"}\n```'
-        };
-        mockGenerateContentFn.mockResolvedValue(mockResponse as GenAIResponse);
+      const mockResponse = {
+        text: '```json\n{"problemSolved": "test problem", "coreSolution": "test solution", "keyFeatures": "- f1", "targetAudience": "test audience"}\n```',
+      };
+      mockGenerateContentFn.mockResolvedValue(mockResponse as GenAIResponse);
 
-        const boilerplate = await localStorageServiceOriginal.generateIdeaBoilerplate('Test Idea');
-        expect(mockGenerateContentFn).toHaveBeenCalledWith(expect.objectContaining({
-            model: 'gemini-2.5-flash-preview-04-17',
-        }));
-        expect(boilerplate).toEqual({
-            problemSolved: 'test problem',
-            coreSolution: 'test solution',
-            keyFeatures: '- f1',
-            targetAudience: 'test audience'
-        });
+      const boilerplate = await localStorageServiceOriginal.generateIdeaBoilerplate('Test Idea');
+      expect(mockGenerateContentFn).toHaveBeenCalledWith(
+        expect.objectContaining({
+          model: 'gemini-2.5-flash-preview-04-17',
+        })
+      );
+      expect(boilerplate).toEqual({
+        problemSolved: 'test problem',
+        coreSolution: 'test solution',
+        keyFeatures: '- f1',
+        targetAudience: 'test audience',
+      });
     });
 
     test('summarizeIdea should call AI and return text', async () => {
-        const mockResponse = { text: 'This is a summary.' };
-        mockGenerateContentFn.mockResolvedValue(mockResponse as GenAIResponse);
-        const ideaContent = { title: 't', problemSolved: 'p', coreSolution: 'c', keyFeatures: 'k', targetAudience: 'a', inspirationNotes: 'i' };
+      const mockResponse = { text: 'This is a summary.' };
+      mockGenerateContentFn.mockResolvedValue(mockResponse as GenAIResponse);
+      const ideaContent = {
+        title: 't',
+        problemSolved: 'p',
+        coreSolution: 'c',
+        keyFeatures: 'k',
+        targetAudience: 'a',
+        inspirationNotes: 'i',
+      };
 
-        const summary = await localStorageServiceOriginal.summarizeIdea(ideaContent);
-        expect(mockGenerateContentFn).toHaveBeenCalled();
-        expect(summary).toBe('This is a summary.');
+      const summary = await localStorageServiceOriginal.summarizeIdea(ideaContent);
+      expect(mockGenerateContentFn).toHaveBeenCalled();
+      expect(summary).toBe('This is a summary.');
     });
   });
-  
+
   describe('Backup and Restore', () => {
     test('should export all projects as a JSON string', () => {
-        localStorageServiceOriginal.createProject('Project 1');
-        localStorageServiceOriginal.createProject('Project 2');
-        const jsonString = localStorageServiceOriginal.getAllProjectsAsJson();
-        const parsed = JSON.parse(jsonString);
-        expect(parsed).toBeInstanceOf(Array);
-        expect(parsed).toHaveLength(2);
-        expect(parsed[0].name).toBe('Project 2'); // newest first
+      localStorageServiceOriginal.createProject('Project 1');
+      localStorageServiceOriginal.createProject('Project 2');
+      const jsonString = localStorageServiceOriginal.getAllProjectsAsJson();
+      const parsed = JSON.parse(jsonString);
+      expect(parsed).toBeInstanceOf(Array);
+      expect(parsed).toHaveLength(2);
+      expect(parsed[0].name).toBe('Project 2'); // newest first
     });
 
     test('should import projects from a JSON string', () => {
-        const project1: Project = { id: 'p1', name: 'Import 1', ideas: [], attachments: [], createdAt: new Date().toISOString(), isFavorite: false };
-        const project2: Project = { id: 'p2', name: 'Import 2', ideas: [], attachments: [], createdAt: new Date().toISOString(), isFavorite: false };
-        const jsonString = JSON.stringify([project1, project2]);
+      const project1: Project = {
+        id: 'p1',
+        name: 'Import 1',
+        ideas: [],
+        attachments: [],
+        createdAt: new Date().toISOString(),
+        isFavorite: false,
+      };
+      const project2: Project = {
+        id: 'p2',
+        name: 'Import 2',
+        ideas: [],
+        attachments: [],
+        createdAt: new Date().toISOString(),
+        isFavorite: false,
+      };
+      const jsonString = JSON.stringify([project1, project2]);
 
-        const result = localStorageServiceOriginal.importProjectsFromJson(jsonString);
-        expect(result.success).toBe(true);
-        expect(result.projectsImported).toBe(2);
+      const result = localStorageServiceOriginal.importProjectsFromJson(jsonString);
+      expect(result.success).toBe(true);
+      expect(result.projectsImported).toBe(2);
 
-        const projects = localStorageServiceOriginal.getProjects();
-        expect(projects).toHaveLength(2);
-        expect(projects.find(p => p.id === 'p1')).toBeDefined();
+      const projects = localStorageServiceOriginal.getProjects();
+      expect(projects).toHaveLength(2);
+      expect(projects.find((p) => p.id === 'p1')).toBeDefined();
     });
 
     test('should handle invalid JSON during import', () => {
-        const invalidJson = '{ not json }';
-        const result = localStorageServiceOriginal.importProjectsFromJson(invalidJson);
-        expect(result.success).toBe(false);
-        expect(result.message).toContain('Import failed:');
+      const invalidJson = '{ not json }';
+      const result = localStorageServiceOriginal.importProjectsFromJson(invalidJson);
+      expect(result.success).toBe(false);
+      expect(result.message).toContain('Import failed:');
     });
   });
 });
