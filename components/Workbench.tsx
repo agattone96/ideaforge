@@ -1,5 +1,5 @@
 // components/Workbench.tsx (Previously ProjectManager.tsx)
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project } from '../types';
 import Button from './Button';
@@ -55,7 +55,7 @@ const Workbench: React.FC<WorkbenchProps> = ({ projects, onProjectSelected, onCr
     }
   }, [projectToDelete, addNotification, onDeleteProject]);
 
-  const handleToggleFavorite = (projectId: string) => {
+  const handleToggleFavorite = (_projectId: string) => {
     // Assuming there's a prop method for toggling favorite as well
     // onToggleFavorite(projectId);
   };
