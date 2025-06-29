@@ -14,7 +14,8 @@ const validMetadata: AppMetadata = {
 };
 
 // Helper to create a partial Response object for mocking
-const createMockResponse = (body: any, ok: boolean, status: number, statusText: string): Response => ({
+const createMockResponse = (body: any, ok: boolean, status: number, statusText: string): Response =>
+  ({
     ok,
     json: async () => Promise.resolve(body), // Ensure json returns a Promise
     status,
@@ -30,7 +31,7 @@ const createMockResponse = (body: any, ok: boolean, status: number, statusText: 
     text: async () => Promise.resolve(JSON.stringify(body)),
     body: null,
     bodyUsed: false,
-  } as Response);
+  } as unknown as Response);
 
 
 describe('metadataService - getValidatedMetadata', () => {

@@ -164,13 +164,16 @@ const IdeaList: React.FC<IdeaListProps> = ({ project, onEditIdea, onCreateNewIde
     }
   };
 
-  // const handleDeleteProjectAttachment = (attachmentId: string) => {
-  //   if (window.confirm("Are you sure you want to unlink this artifact from the constellation?")) { // Rephrased
-  //       fileService.deleteAttachmentFromProject(project.id, attachmentId);
-  //       onUpdateProject({ ...project, attachments: project.attachments?.filter(att => att.id !== attachmentId) });
-  //       addNotification('Constellation artifact unlinked.', 'info'); // Updated
-  //   }
-  // };
+  const handleDeleteProjectAttachment = (attachmentId: string) => {
+    if (window.confirm("Are you sure you want to unlink this artifact from the constellation?")) {
+      const updatedProject = {
+        ...project,
+        attachments: (project.attachments || []).filter(att => att.id !== attachmentId),
+      };
+      onUpdateProject(updatedProject);
+      addNotification('Constellation artifact unlinked.', 'info');
+    }
+  };
 
   const getFileIcon = (type: Attachment['type']) => {
     if (type === 'image') return <PhotoIcon className="w-5 h-5 text-theme-accent-primary mr-2 flex-shrink-0" />;

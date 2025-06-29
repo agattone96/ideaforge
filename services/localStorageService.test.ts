@@ -1,7 +1,7 @@
 
 
-import { GoogleGenAI, GenerateContentResponse as GenAIResponse, GenerateContentParameters as GenAIParameters } from '@google/genai';
-import { describe, test, expect, beforeEach, jest, afterEach } from '@jest/globals';
+import { GenerateContentResponse as GenAIResponse, GenerateContentParameters as GenAIParameters } from '@google/genai';
+import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import * as localStorageServiceOriginal from './localStorageService'; // Adjust path
 import { Project, Idea } from '../types'; // Adjust path
 // Import types from @google/genai directly for mocking clarity

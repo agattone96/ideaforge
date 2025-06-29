@@ -8,9 +8,8 @@ import {
   exportProjectAsZip,
   readFileAsText,
   readFileAsBase64,
-  base64ToBlob, // Ensure this is imported if used directly or for verification
 } from './fileService'; // Adjust path as necessary
-import { Idea, Project, Attachment } from '../types'; // Adjust path as necessary
+import { Idea, Project } from '../types'; // Adjust path as necessary
 
 // Mock JSZip
 const mockZipFile = jest.fn();

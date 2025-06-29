@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 interface HistoryState<T> {
   past: T[];
@@ -73,7 +73,13 @@ interface AppState {
 
 const UndoRedoContext = createContext<UndoRedoContextType<AppState> | undefined>(undefined);
 
-export const UndoRedoProvider = ({ children, initialState }: { children: ReactNode; initialState: AppState }) => {
+export const UndoRedoProvider = ({
+  children,
+  initialState,
+}: {
+  children: import('react').ReactNode;
+  initialState: AppState;
+}) => {
   const value = useUndoRedo<AppState>(initialState);
   return <UndoRedoContext.Provider value={value}>{children}</UndoRedoContext.Provider>;
 };
