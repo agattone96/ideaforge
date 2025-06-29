@@ -1,5 +1,5 @@
 // components/ErrorBoundary.tsx
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from "react";
 import Button from './Button'; // Assuming Button component is in the same directory or accessible
 import { ExclamationTriangleIcon } from './icons'; // Assuming an icon component
 
