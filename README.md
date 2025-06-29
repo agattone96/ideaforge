@@ -1,5 +1,8 @@
 # IdeaForge Local – Ascension Edition
 
+![CI](https://github.com/agattone96/ideaforge/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/coverage-33%25-red)
+
 IdeaForge Local is a privacy-first, local-only ideation and project management tool for creative professionals, founders, and teams. Capture, organize, and refine your app ideas, startup concepts, or product blueprints in a beautiful, tactile interface—entirely on your device. No accounts, no cloud, no data leaves your machine.
 
 ## Key Features
@@ -49,6 +52,32 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
    ```
    The app will be available at `http://localhost:3000` by default.
 
+## Usage
+
+### Running Locally
+Start the development server and open the app in your browser:
+```bash
+npm run dev
+```
+Any changes to the source will reload the page automatically.
+
+### Building for Production
+Create an optimized bundle in the `dist/` directory:
+```bash
+npm run build
+```
+Serve the contents of `dist/` with a static file server of your choice.
+
+### Running Tests
+Execute the test suite with:
+```bash
+npm test
+```
+Generate a coverage report with:
+```bash
+npm test -- --coverage
+```
+
 ## Project Structure
 - `components/` – Reusable UI components
 - `services/` – Business logic and data services
@@ -73,7 +102,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting, and tests on every push to ensure code quality.
 
 ## Contributing
-Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See `CONTRIBUTING.md` for guidelines (if available).
+Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See the [contribution guidelines](CONTRIBUTING.md) for details on workflow and coding standards.
 
 ## License
 Specify your license here (e.g., MIT, Apache 2.0).
