@@ -1,7 +1,8 @@
 // components/ErrorBoundary.tsx
+
 import { Component, ErrorInfo, ReactNode } from 'react';
-import Button from './Button'; // Assuming Button component is in the same directory or accessible
-import { ExclamationTriangleIcon } from './icons'; // Assuming an icon component
+import Button from './Button'; // Ensure Button is in the same directory
+import { ExclamationTriangleIcon } from './icons'; // Ensure icon is available
 
 interface Props {
   children: ReactNode;
@@ -20,13 +21,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(_: Error): State {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // You can also log the error to an error reporting service
-    console.error("Uncaught error:", error, errorInfo);
+    console.error('Uncaught error:', error, errorInfo);
     this.setState({ error, errorInfo });
   }
 
@@ -36,7 +35,6 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
       return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-charcoal-dark text-off-white p-6 font-sans">
           <ExclamationTriangleIcon className="w-16 h-16 text-error mb-6" />
@@ -47,7 +45,7 @@ class ErrorBoundary extends Component<Props, State> {
           <p className="text-sm text-off-white-dim mb-8 text-center max-w-md">
             Try re-igniting the forge (reload). If the anomaly persists, consult the star-charts (console) or consider a full data dissolution if corruption is suspected.
           </p>
-          
+
           <Button onClick={this.handleReload} variant="default" size="lg">
             Reload Application
           </Button>
@@ -57,7 +55,7 @@ class ErrorBoundary extends Component<Props, State> {
               <summary className="cursor-pointer text-amber hover:text-amber-light">Anomaly Report (Dev Sector)</summary>
               <pre className="mt-2 text-xs text-off-white whitespace-pre-wrap">
                 {this.state.error.toString()}
-                {this.state.errorInfo && this.state.errorInfo.componentStack}
+                {this.state.errorInfo?.componentStack}
               </pre>
             </details>
           )}
