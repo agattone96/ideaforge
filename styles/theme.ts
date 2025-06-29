@@ -48,7 +48,7 @@ export interface SpacingTokens {
 export interface RadiusTokens {
   sm: string;
   md: string;
-  lg:  string;
+  lg: string;
   xl: string;
   xxl: string;
   card: string;
@@ -83,10 +83,12 @@ export interface ThemeProperties {
 }
 
 // --- Define Base Tokens (used across themes or as defaults) ---
-const baseTypography: Omit<TypographyTokens, 'fontFamilyDisplay'> = { // fontFamilyDisplay is theme-specific
+const baseTypography: Omit<TypographyTokens, 'fontFamilyDisplay'> = {
+  // fontFamilyDisplay is theme-specific
   fontFamilyBody: "'Sora', ui-serif, system-ui",
   fontFamilySans: "'Unbounded', ui-sans-serif, system-ui",
-  fontFamilyMono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  fontFamilyMono:
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   fontScaleRatio: 1.25, // Major Third
   fontSizeBase: '1rem',
 };
@@ -103,12 +105,12 @@ const baseSpacing: SpacingTokens = {
 };
 
 const baseRadii: RadiusTokens = {
-  sm: '0.125rem',   /* 2px */
-  md: '0.25rem',    /* 4px */
-  lg: '0.5rem',     /* 8px */
-  xl: '0.75rem',    /* 12px */
-  xxl: '1rem',      /* 16px */
-  card: 'var(--radius-xl)', /* alias to xl */
+  sm: '0.125rem' /* 2px */,
+  md: '0.25rem' /* 4px */,
+  lg: '0.5rem' /* 8px */,
+  xl: '0.75rem' /* 12px */,
+  xxl: '1rem' /* 16px */,
+  card: 'var(--radius-xl)' /* alias to xl */,
   full: '9999px',
 };
 
@@ -120,11 +122,14 @@ const baseTransitions: TransitionTokens = {
 };
 
 const baseShadows: ShadowTokens = {
-    card: '0 4px 12px rgba(0,0,0,0.15)', // Softer default
-    cardHover: '0 6px 18px rgba(0,0,0,0.2)',
-    glowAccentSm: '0 0 4px var(--color-glow-primary, var(--color-accent-primary)), 0 0 8px var(--color-glow-secondary, var(--color-accent-secondary))',
-    glowAccentMd: '0 0 8px var(--color-glow-primary, var(--color-accent-primary)), 0 0 12px var(--color-glow-secondary, var(--color-accent-secondary))',
-    glowAccentLg: '0 0 12px var(--color-glow-primary, var(--color-accent-primary)), 0 0 20px var(--color-glow-secondary, var(--color-accent-secondary))',
+  card: '0 4px 12px rgba(0,0,0,0.15)', // Softer default
+  cardHover: '0 6px 18px rgba(0,0,0,0.2)',
+  glowAccentSm:
+    '0 0 4px var(--color-glow-primary, var(--color-accent-primary)), 0 0 8px var(--color-glow-secondary, var(--color-accent-secondary))',
+  glowAccentMd:
+    '0 0 8px var(--color-glow-primary, var(--color-accent-primary)), 0 0 12px var(--color-glow-secondary, var(--color-accent-secondary))',
+  glowAccentLg:
+    '0 0 12px var(--color-glow-primary, var(--color-accent-primary)), 0 0 20px var(--color-glow-secondary, var(--color-accent-secondary))',
 };
 
 // --- Theme Definitions ---
@@ -159,7 +164,7 @@ export const darkTheme: ThemeProperties = {
     ...baseShadows,
     card: '0 4px 12px 0 rgba(0,0,0,0.3)', // Original dark theme card shadow
     cardHover: '0 8px 20px 0 rgba(0,0,0,0.35)',
-  }
+  },
 };
 
 export const lightTheme: ThemeProperties = {
@@ -220,11 +225,15 @@ export const cosmicTheme: ThemeProperties = {
   shadows: {
     ...baseShadows,
     card: '0 5px 15px rgba(var(--rgb-accent-primary, 255,0,230), 0.1), 0 2px 8px rgba(var(--rgb-accent-secondary,0,240,255), 0.1)',
-    cardHover: '0 8px 25px rgba(var(--rgb-accent-primary, 255,0,230), 0.2), 0 4px 12px rgba(var(--rgb-accent-secondary,0,240,255), 0.2)',
-    glowAccentSm: '0 0 5px var(--color-glow-primary), 0 0 10px var(--color-glow-primary), 0 0 3px var(--color-glow-secondary)',
-    glowAccentMd: '0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary), 0 0 6px var(--color-glow-secondary)',
-    glowAccentLg: '0 0 15px var(--color-glow-primary), 0 0 30px var(--color-glow-primary), 0 0 10px var(--color-glow-secondary), 0 0 5px #fff', // Add white hint
-  }
+    cardHover:
+      '0 8px 25px rgba(var(--rgb-accent-primary, 255,0,230), 0.2), 0 4px 12px rgba(var(--rgb-accent-secondary,0,240,255), 0.2)',
+    glowAccentSm:
+      '0 0 5px var(--color-glow-primary), 0 0 10px var(--color-glow-primary), 0 0 3px var(--color-glow-secondary)',
+    glowAccentMd:
+      '0 0 10px var(--color-glow-primary), 0 0 20px var(--color-glow-primary), 0 0 6px var(--color-glow-secondary)',
+    glowAccentLg:
+      '0 0 15px var(--color-glow-primary), 0 0 30px var(--color-glow-primary), 0 0 10px var(--color-glow-secondary), 0 0 5px #fff', // Add white hint
+  },
 };
 
 export const themes: Record<ThemeName, ThemeProperties> = {
@@ -238,6 +247,8 @@ export const themes: Record<ThemeName, ThemeProperties> = {
 // and the useTheme hook (or directly in App.tsx).
 // Tailwind CSS will pick up these CSS variables as defined in its config in index.html.
 
-console.info("styles/theme.ts: Design tokens loaded. Theme application managed via CSS custom properties and theme classes on <html>.");
+console.info(
+  'styles/theme.ts: Design tokens loaded. Theme application managed via CSS custom properties and theme classes on <html>.'
+);
 
 export default themes;
