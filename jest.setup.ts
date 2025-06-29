@@ -1,6 +1,24 @@
 import '@testing-library/jest-dom'; // Use more explicit import for type augmentation
 import { jest, beforeEach, afterEach } from '@jest/globals';
 
+// Mock jsPDF and html2canvas used in PDF export utilities
+jest.mock('jspdf', () => {
+  return {
+    default: jest.fn().mockImplementation(() => ({
+      addImage: jest.fn(),
+      save: jest.fn(),
+      getImageProperties: jest.fn(() => ({ width: 1, height: 1 })),
+      internal: {
+        pageSize: {
+          getWidth: () => 595,
+          getHeight: () => 842,
+        },
+      },
+    })),
+  };
+});
+jest.mock('html2canvas', () => jest.fn(async () => document.createElement('canvas')));
+
 // Mock localStorage for tests
 const localStorageMock = (() => {
   let store: { [key: string]: string } = {};
