@@ -1,4 +1,3 @@
-
 import '@testing-library/jest-dom'; // Use more explicit import for type augmentation
 import { jest, beforeEach, afterEach } from '@jest/globals';
 
@@ -22,37 +21,35 @@ const localStorageMock = (() => {
 })();
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-// Mock crypto.randomUUID if not available in JSDOM (it usually is in newer versions)
+// Mock crypto.randomUUID if not available in JSDOM
 if (typeof crypto === 'undefined' || typeof crypto.randomUUID === 'undefined') {
   Object.defineProperty(globalThis, 'crypto', {
     value: {
-      randomUUID: () => 
-        // A simple UUID v4 polyfill for testing purposes
-         'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      randomUUID: () =>
+        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
           const r = (Math.random() * 16) | 0;
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
+          const v = c === 'x' ? r : (r & 0x3) | 0x8;
           return v.toString(16);
-        })
-      ,
+        }),
     },
   });
 }
 
-// Mock window.JSZip for fileService tests if needed and not loaded by JSDOM
+// Mock window.JSZip if needed
 if (typeof (window as any).JSZip === 'undefined') {
   const mockJSZipInstance = {
     file: jest.fn().mockReturnThis(),
     folder: jest.fn().mockReturnThis(),
-    generateAsync: jest.fn<() => Promise<Blob>>().mockResolvedValue(new Blob()), // Typed mock
-    loadAsync: jest.fn<() => Promise<any>>().mockResolvedValue({ // Typed mock, 'any' for simplicity
+    generateAsync: jest.fn<() => Promise<Blob>>().mockResolvedValue(new Blob()),
+    loadAsync: jest.fn<() => Promise<any>>().mockResolvedValue({
       files: {
         'test.txt': {
-          async: jest.fn<() => Promise<string>>().mockResolvedValue('test content'), // Typed mock
+          async: jest.fn<() => Promise<string>>().mockResolvedValue('test content'),
           dir: false,
-          name: 'test.txt'
-        }
-      }
-    })
+          name: 'test.txt',
+        },
+      },
+    }),
   };
   Object.defineProperty(window, 'JSZip', {
     value: jest.fn(() => mockJSZipInstance),
@@ -74,21 +71,16 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Suppress console.warn and console.error for cleaner test output
-// You can comment this out if you need to see these logs during tests
-// console.warn = jest.fn();
-// console.error = jest.fn();
-
-// Mock process.env for test environments
+// Mock process.env
 const originalProcessEnv = process.env;
 beforeEach(() => {
-  jest.resetModules(); // Reset modules to allow env changes
+  jest.resetModules();
   process.env = {
     ...originalProcessEnv,
-    API_KEY: 'test-api-key', // Provide a mock API key for tests
+    API_KEY: 'test-api-key',
   };
 });
 
 afterEach(() => {
-  process.env = originalProcessEnv; // Restore original process.env
+  process.env = originalProcessEnv;
 });
