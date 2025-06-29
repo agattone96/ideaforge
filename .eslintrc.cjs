@@ -43,7 +43,7 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['**/*.test.tsx', '**/*.test.ts', '**/jest.setup.ts'] },
+      { devDependencies: ['**/*.test.tsx', '**/*.test.ts', '**/setupTests.ts'] },
     ],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'no-use-before-define': 'off',

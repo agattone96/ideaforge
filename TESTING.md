@@ -1,41 +1,45 @@
-# Testing Guide
+# 🧪 Testing Guide
 
 ## Overview
-The project uses **Jest** with **React Testing Library** and a custom
-`setupTests.ts` file to provide a stable test environment running in JSDOM.
-`jest.config.cjs` loads this file automatically via `setupFilesAfterEnv`.
 
-## Provided Mocks
+This project uses **Jest** with **React Testing Library** for unit and integration testing. The global test environment is configured via `setupTests.ts`, automatically loaded through Jest’s `setupFilesAfterEnv` setting. Tests execute within a **JSDOM**-based browser simulation.
 
-- **localStorage** – A small in-memory replacement so tests can store and
-  retrieve data exactly as the browser would.
-- **crypto.randomUUID** – Deterministic polyfill returning sequential UUIDv4
-  strings. This avoids flaky tests that depend on random values.
-- **JSZip** – Lightweight class with `file`, `folder`, `generateAsync`, and
-  `loadAsync` stubs. Useful for services that handle ZIP files.
-- **matchMedia** – Polyfill so components relying on media queries can run under
-  JSDOM without errors.
-- **process.env** – The entire environment is copied before each test and
-  restored afterwards to ensure isolation.
+## 🧱 Provided Mocks
 
-Each mock is reset in `beforeEach`/`afterEach` so tests remain deterministic and
-reusable.
+The following mocks are configured to ensure consistent, isolated, and browser-like behavior during tests:
 
-## Adding New Mocks
-Extend `setupTests.ts` with additional utilities if a library or browser API
-needs mocking. Keep implementations minimal and comment why each mock exists.
-Use `beforeEach`/`afterEach` hooks to restore state.
+- **`localStorage`** – In-memory mock to simulate web storage.
+- **`crypto.randomUUID`** – Deterministic UUID v4 polyfill returning sequential values to prevent flaky tests.
+- **`JSZip`** – Lightweight stub of the ZIP handling library supporting:
+  - `file`
+  - `folder`
+  - `generateAsync`
+  - `loadAsync`
+- **`matchMedia`** – Polyfill that enables media query support under JSDOM.
+- **`process.env`** – Environment variables are cloned before each test and restored afterward to isolate side effects.
 
-## Running Tests Locally
-From the project root, run:
+All mocks are automatically reset in `beforeEach`/`afterEach` to maintain test integrity.
+
+## ➕ Adding New Mocks
+
+Extend `setupTests.ts` when a library or browser API requires mocking:
+
+1. Implement the mock.
+2. Reset state with `beforeEach`/`afterEach`.
+3. Add inline comments explaining the purpose of the mock.
+
+Keep all mocks lightweight and focused on test-specific behavior.
+
+## ▶️ Running Tests Locally
+
+Run tests from the project root using your preferred package manager:
 
 ```bash
-# with npm
+# npm
 npm test
 
-# or yarn
+# yarn
 yarn test
 
-# or pnpm
+# pnpm
 pnpm test
-```
