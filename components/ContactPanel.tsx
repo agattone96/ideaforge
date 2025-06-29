@@ -5,10 +5,12 @@ import Button from './Button';
 import TextInput from './TextInput';
 import TextArea from './TextArea';
 import { XMarkIcon, PaperAirplaneIcon } from './icons';
+import * as logger from '../services/logger';
 
 interface ContactPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  addNotification: (message: string, type: 'success' | 'error' | 'info') => void;
 }
 
 const panelVariants: Variants = { // Explicitly typed with Variants
@@ -17,7 +19,7 @@ const panelVariants: Variants = { // Explicitly typed with Variants
   exit: { y: '100%', opacity: 0, transition: { ease: 'anticipate', duration: 0.4 } },
 };
 
-const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose }) => {
+const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotification }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -31,17 +33,19 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose }) => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     // Replace with actual form submission logic (e.g., to Formspree, Netlify Forms, or backend)
-    console.log('Form submitted:', { name, email, message });
+    logger.info('Contact form submitted', { name, email, message });
     setIsSubmitting(false);
     if (Math.random() > 0.1) { // Simulate mostly success
         setSubmitStatus('success');
         setName(''); setEmail(''); setMessage('');
+        addNotification('Transmission sent successfully.', 'success');
         setTimeout(() => {
             setSubmitStatus(null);
-            onClose(); 
+            onClose();
         }, 3000);
     } else {
         setSubmitStatus('error');
+        addNotification('Transmission failed to send.', 'error');
     }
   };
 

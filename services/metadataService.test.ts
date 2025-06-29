@@ -3,8 +3,11 @@ import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import { getValidatedMetadata } from "./metadataService"; // Adjust path as necessary
 import { AppMetadata } from '../types/Metadata'; // Adjust path as necessary
 
-// Mock globalThis.fetch
-const mockFetch = jest.spyOn(globalThis, 'fetch');
+// Stub global fetch for the test environment
+(globalThis as any).fetch = jest.fn();
+
+// Reference the stubbed fetch for easier mocking in tests
+const mockFetch = globalThis.fetch as jest.MockedFunction<typeof fetch>;
 
 const validMetadata: AppMetadata = {
   name: "IdeaForge Local Test",

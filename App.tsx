@@ -245,6 +245,7 @@ const App: React.FC = () => {
         <ContactPanel
           isOpen={isContactPanelOpen}
           onClose={() => setIsContactPanelOpen(false)}
+          addNotification={addNotification}
         />
 
         {showOnboarding && (

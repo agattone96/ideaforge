@@ -1,6 +1,7 @@
 // utils/zineExporter.ts
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import * as logger from '../services/logger';
 
 // Custom hook for sorting/filtering ideas
 import { useMemo } from 'react';
@@ -86,7 +87,7 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
     }
 
     pdf.save(filename);
-    console.log(`Zine exported as ${filename}`);
+    logger.info(`Zine exported as ${filename}`);
 
   } catch (error) {
     console.error("Error exporting Zine:", error);
