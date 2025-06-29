@@ -59,7 +59,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 - `utils/` – Utility functions (e.g., export helpers)
 - `rendering/` – Advanced rendering (e.g., `CosmicCanvas`)
 - `__mocks__/` – Jest test mocks
-- Configuration: `jest.config.js`, `tsconfig.json`, `vite.config.ts`, etc.
+- Configuration: `jest.config.cjs`, `tsconfig.json`, `vite.config.ts`, etc.
 
 ## Development Workflow
 - **Start Dev Server:** `npm run dev`
