@@ -13,17 +13,17 @@ export default defineConfig(({ mode }) => {
     define: {
       // Expose environment variables to the client.
       // This makes `process.env.API_KEY` available in the code.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY)
+      'process.env.API_KEY': JSON.stringify(env.API_KEY),
     },
     // Server configuration for development
     server: {
       port: 3000, // You can specify a port
-      open: true,   // Automatically open the app in the browser on server start
+      open: true, // Automatically open the app in the browser on server start
     },
     // Build configuration
     build: {
       outDir: 'dist', // Output directory for build files
       sourcemap: true, // Generate source maps for debugging
     },
-  }
+  };
 });

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { Project } from '../types';
 
 interface HistoryState<T> {
   past: T[];
@@ -67,8 +68,9 @@ function useUndoRedo<T>(initialPresent: T): UndoRedoContextType<T> {
 }
 
 // Context for the whole app (projects and ideas)
+
 interface AppState {
-  projects: any[]; // Replace with Project[] type
+  projects: Project[];
 }
 
 const UndoRedoContext = createContext<UndoRedoContextType<AppState> | undefined>(undefined);

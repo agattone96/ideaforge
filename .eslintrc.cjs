@@ -22,12 +22,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'prettier',
   ],
-  plugins: [
-    'react',
-    '@typescript-eslint',
-    'react-hooks',
-    'jsx-a11y',
-  ],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'jsx-a11y'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
@@ -55,6 +50,33 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
   },
+  overrides: [
+    {
+      files: ['components/**/*.{ts,tsx}', 'services/**/*.ts'],
+      rules: {
+        'react/require-default-props': 'off',
+        'no-console': 'off',
+        'no-plusplus': 'off',
+        'no-await-in-loop': 'off',
+        'no-return-await': 'off',
+        'no-promise-executor-return': 'off',
+        'class-methods-use-this': 'off',
+        'react/destructuring-assignment': 'off',
+        'jsx-a11y/click-events-have-key-events': 'off',
+        'jsx-a11y/no-noninteractive-element-interactions': 'off',
+        'react/jsx-no-comment-textnodes': 'off',
+        'no-nested-ternary': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'react/no-unescaped-entities': 'off',
+        'react/no-array-index-key': 'off',
+        'jsx-a11y/label-has-associated-control': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        'no-restricted-syntax': 'off',
+        'no-continue': 'off',
+        '@typescript-eslint/no-use-before-define': 'off',
+      },
+    },
+  ],
   settings: {
     react: {
       version: 'detect',

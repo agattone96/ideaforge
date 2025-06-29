@@ -20,10 +20,12 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 ## Getting Started
 
 ### Prerequisites
+
 - **Node.js** v18.x or later
 - **npm** v9.x or later (or `yarn`/`pnpm`)
 
 ### Installation
+
 1. **Clone the Repository:**
    ```bash
    git clone <repository-url>
@@ -50,6 +52,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
    The app will be available at `http://localhost:3000` by default.
 
 ## Project Structure
+
 - `components/` – Reusable UI components
 - `services/` – Business logic and data services
 - `styles/` – Theme and global style definitions
@@ -62,6 +65,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 - Configuration: `jest.config.cjs`, `tsconfig.json`, `vite.config.ts`, etc.
 
 ## Development Workflow
+
 - **Start Dev Server:** `npm run dev`
 - **Build for Production:** `npm run build`
 - **Lint:** `npm run lint`
@@ -70,12 +74,15 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 - **Test with Coverage:** `npm test -- --coverage`
 
 ## Continuous Integration
+
 A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting, and tests on every push to ensure code quality.
 
 ## Contributing
+
 Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See `CONTRIBUTING.md` for guidelines (if available).
 
 ## License
+
 Specify your license here (e.g., MIT, Apache 2.0).
 
 ---
