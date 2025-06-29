@@ -1,22 +1,38 @@
-# Testing Guide
+# 🧪 Testing Guide
 
 ## Overview
-This project uses **Jest** together with **React Testing Library**. The global test environment is configured through `setupTests.ts`, loaded automatically via Jest's `setupFilesAfterEnv`.
 
-## Provided Mocks
-- **localStorage** – In-memory replacement to isolate storage across tests.
-- **crypto.randomUUID** – Deterministic UUID v4 polyfill producing sequential values.
-- **JSZip** – Lightweight mock implementing `file`, `folder`, `generateAsync`, and `loadAsync`.
-- **matchMedia** – Polyfill for JSDOM to emulate media queries.
-- **process.env** – Environment variables are copied before each test and restored after.
+This project uses **Jest** with **React Testing Library** for unit and integration testing. The global test environment is configured via `setupTests.ts`, automatically loaded through Jest’s `setupFilesAfterEnv` setting. Tests execute within a **JSDOM**-based browser simulation.
 
-All mocks reset state in `beforeEach`/`afterEach` hooks to keep tests deterministic and reusable.
+## 🧱 Provided Mocks
 
-## Adding New Mocks
-Extend `setupTests.ts` with additional mocks when new browser APIs or libraries require them. Document the purpose of each mock and ensure any mutable state is reset between tests.
+The following mocks are configured to ensure consistent, isolated, and browser-like behavior during tests:
 
-## Running Tests Locally
-Use your preferred package manager:
+- **`localStorage`** – In-memory mock to simulate web storage.
+- **`crypto.randomUUID`** – Deterministic UUID v4 polyfill returning sequential values to prevent flaky tests.
+- **`JSZip`** – Lightweight stub of the ZIP handling library supporting:
+  - `file`
+  - `folder`
+  - `generateAsync`
+  - `loadAsync`
+- **`matchMedia`** – Polyfill that enables media query support under JSDOM.
+- **`process.env`** – Environment variables are cloned before each test and restored afterward to isolate side effects.
+
+All mocks are automatically reset in `beforeEach`/`afterEach` to maintain test integrity.
+
+## ➕ Adding New Mocks
+
+Extend `setupTests.ts` when a library or browser API requires mocking:
+
+1. Implement the mock.
+2. Reset state with `beforeEach`/`afterEach`.
+3. Add inline comments explaining the purpose of the mock.
+
+Keep all mocks lightweight and focused on test-specific behavior.
+
+## ▶️ Running Tests Locally
+
+Run tests from the project root using your preferred package manager:
 
 ```bash
 # npm
@@ -27,18 +43,3 @@ yarn test
 
 # pnpm
 pnpm test
-```
-
-Coverage reports are written to the `coverage` directory.
-
-## Continuous Integration
-The workflow `.github/workflows/test.yml` runs linting and tests on Node 18 and 20 for pushes and pull requests. Dependencies are cached based on the detected package manager. Coverage artifacts are uploaded for inspection.
-
-## Extending setupTests.ts
-1. Add the mock implementation.
-2. Reset its state in `beforeEach`/`afterEach`.
-3. Provide inline comments explaining why the mock exists.
-
-## Known Limitations
-- The UUID polyfill is deterministic and not suitable when true randomness is required.
-- The JSZip mock supports only basic usage; extend it if more methods are needed.
