@@ -1,5 +1,5 @@
 
-import '@testing-library/jest-dom/extend-expect'; // Use more explicit import for type augmentation
+import '@testing-library/jest-dom'; // Import matchers
 import { jest, beforeEach, afterEach } from '@jest/globals';
 
 // Mock localStorage for tests
