@@ -76,7 +76,7 @@ A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting,
 Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See `CONTRIBUTING.md` for guidelines (if available).
 
 ## License
-Specify your license here (e.g., MIT, Apache 2.0).
+This project is licensed under the [MIT](LICENSE) license.
 
 ---
 
