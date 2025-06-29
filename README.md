@@ -73,7 +73,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting, and tests on every push to ensure code quality.
 
 ## Contributing
-Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See `CONTRIBUTING.md` for guidelines (if available).
+Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 Specify your license here (e.g., MIT, Apache 2.0).
