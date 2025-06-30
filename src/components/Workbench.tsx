@@ -1,13 +1,13 @@
 // components/Workbench.tsx (Previously ProjectManager.tsx)
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Project } from '../types';
+import { Project } from '@/types';
 import Button from './Button';
 import TextInput from './TextInput';
 import Modal from './Modal';
 import BlueprintCard from './BlueprintCard'; // New card component
 import { PlusCircleIcon, StarIcon, DocumentTextIcon } from './icons'; // Added DocumentTextIcon for placeholder
-import { staggerContainer, staggerItem } from '../motion/variants';
+import { staggerContainer, staggerItem } from '@/motion/variants';
 
 interface WorkbenchProps {
   projects: Project[];
