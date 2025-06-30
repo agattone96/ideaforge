@@ -1,7 +1,7 @@
 // jest.config.cjs
 module.exports = {
   testEnvironment: 'jsdom',
-  roots: ['<rootDir>/src', '<rootDir>/components', '<rootDir>/services', '<rootDir>/hooks', '<rootDir>/utils'],
+  roots: ['<rootDir>/src'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },

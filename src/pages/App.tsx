@@ -1,26 +1,26 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { AppView, Idea, NotificationType } from './types';
-import * as localStorageService from './services/localStorageService';
-import { UndoRedoProvider, useUndoRedoContext } from './hooks/useUndoRedo';
-import type { Project } from './types';
+import { AppView, Idea, NotificationType } from '../../types';
+import * as localStorageService from '../services/localStorageService';
+import { UndoRedoProvider, useUndoRedoContext } from '../hooks/useUndoRedo';
+import type { Project } from '../../types';
 
 // Import components
-import LandingPage from './components/LandingPage';
-import Workbench from './components/Workbench';
-import IdeaList from './components/IdeaList';
-import IdeaEditor from './components/IdeaEditor';
-import NotificationArea from './components/NotificationArea';
-import SettingsModal from './components/SettingsModal';
-import ContactPanel from './components/ContactPanel';
-import Button from './components/Button';
-import CosmicCanvas from './rendering/CosmicCanvas'; // Import the new canvas
-import { CogIcon, EnvelopeIcon } from './components/icons';
-import Modal from './components/Modal';
+import LandingPage from '../components/LandingPage';
+import Workbench from '../components/Workbench';
+import IdeaList from '../components/IdeaList';
+import IdeaEditor from '../components/IdeaEditor';
+import NotificationArea from '../components/NotificationArea';
+import SettingsModal from '../components/SettingsModal';
+import ContactPanel from '../components/ContactPanel';
+import Button from '../components/Button';
+import CosmicCanvas from '../rendering/CosmicCanvas';
+import { CogIcon, EnvelopeIcon } from '../components/icons';
+import Modal from '../components/Modal';
 
 // Import hooks and types for theme
-import { useTheme } from './hooks/useTheme';
-import { ThemeName } from './styles/theme';
+import { useTheme } from '../hooks/useTheme';
+import { ThemeName } from '../styles/theme';
 
 const App: React.FC = () => {
   // Main app state

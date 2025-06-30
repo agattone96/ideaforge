@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Modal from './Modal';
 import Button from './Button';
-import { NotificationType } from '../types';
+import { NotificationType } from '../../types';
 import * as Storage from '../services/localStorageService';
 import { 
     ArrowDownTrayIcon, ArrowUpTrayIcon, SparklesIcon, TrashIcon, CogIcon,

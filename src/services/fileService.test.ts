@@ -9,7 +9,7 @@ import {
   readFileAsText,
   readFileAsBase64,
 } from './fileService'; // Adjust path as necessary
-import { Idea, Project } from '../types'; // Adjust path as necessary
+import { Idea, Project } from '../../types';
 
 // Mock JSZip
 const mockZipFile = jest.fn();

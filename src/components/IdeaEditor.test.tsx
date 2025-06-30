@@ -5,7 +5,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import IdeaEditor from './IdeaEditor';
-import { Project, Idea, Attachment } from '../types'; // Adjust path
+import { Project, Idea, Attachment } from '../../types';
 import * as localStorageService from '../services/localStorageService'; // Adjust path
 import { IdeaBoilerplate } from '../services/localStorageService'; // Correct import for IdeaBoilerplate
 import * as fileService from '../services/fileService'; // Adjust path

@@ -1,7 +1,7 @@
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import { getValidatedMetadata } from "./metadataService"; // Adjust path as necessary
-import { AppMetadata } from '../types/Metadata'; // Adjust path as necessary
+import { AppMetadata } from '../../types/Metadata';
 
 // Mock globalThis.fetch
 const mockFetch = jest.spyOn(globalThis, 'fetch');

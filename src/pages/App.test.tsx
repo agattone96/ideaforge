@@ -5,12 +5,12 @@ import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import App from './App'; // Adjust path as necessary
-import ErrorBoundary from './components/ErrorBoundary'; // Import ErrorBoundary
+import ErrorBoundary from '../components/ErrorBoundary'; // Import ErrorBoundary
 
 
 // Mock child components that might have complex logic or side effects
-jest.mock('./components/WelcomeScreen', () => () => <div data-testid="welcome-screen">Welcome Screen</div>);
-jest.mock('./components/Workbench', () => () => <div data-testid="workbench">Workbench</div>);
+jest.mock('../components/WelcomeScreen', () => () => <div data-testid="welcome-screen">Welcome Screen</div>);
+jest.mock('../components/Workbench', () => () => <div data-testid="workbench">Workbench</div>);
 // Add mocks for other components like IdeaList, IdeaEditor, SettingsModal, ContactPanel, NotificationArea if they cause issues or for isolation
 
 describe('App Component', () => {

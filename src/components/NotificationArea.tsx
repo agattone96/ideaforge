@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NotificationType } from '../types';
+import { NotificationType } from '../../types';
 import { CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from './icons'; // Assuming these icons are themed
 
 interface NotificationAreaProps {

@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import RippleButton from './RippleButton'; 
-import { slideDown, staggerContainer, staggerItem } from '../motion/variants'; 
+import { slideDown, staggerContainer, staggerItem } from '../../motion/variants';
 import { PlusCircleIcon, SparklesIcon } from './icons';
 
 interface WelcomeScreenProps {

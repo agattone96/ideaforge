@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import JSZip from 'jszip';
-import { Idea, Attachment, Project } from '../types';
+import { Idea, Attachment, Project } from '../../types';
 import Button from './Button';
 import TextInput from './TextInput';
 import TextArea from './TextArea';

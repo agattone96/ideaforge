@@ -1,7 +1,7 @@
 // components/BlueprintCard.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
-import { Project, Idea } from '../types';
+import { Project, Idea } from '../../types';
 import Button from './Button'; 
 import { StarIcon, EyeIcon, DocumentTextIcon, PlusCircleIcon, TrashIcon, EyeSlashIcon } from './icons'; 
 

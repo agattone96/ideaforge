@@ -1,5 +1,5 @@
 // services/metadataService.ts
-import { AppMetadata, AppMetadataSchema } from '../types/Metadata';
+import { AppMetadata, AppMetadataSchema } from '../../types/Metadata';
 
 export const getValidatedMetadata = async (): Promise<AppMetadata> => {
   try {
