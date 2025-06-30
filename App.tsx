@@ -17,6 +17,7 @@ import Button from './components/Button';
 import CosmicCanvas from './rendering/CosmicCanvas'; // Import the new canvas
 import { CogIcon, EnvelopeIcon } from './components/icons';
 import Modal from './components/Modal';
+import AppHeader from './components/AppHeader';
 
 // Import hooks and types for theme
 import { useTheme } from './hooks/useTheme';
@@ -200,6 +201,7 @@ const App: React.FC = () => {
     <UndoRedoProvider initialState={{ projects: initialProjects }}>
       <div className="font-body text-theme-text-primary min-h-screen">
         <CosmicCanvas />
+        <AppHeader />
         <main id="main-content" className="relative z-10">
           <AnimatePresence mode="wait">
             {renderView()}
