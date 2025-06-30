@@ -18,7 +18,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   ...props
 }) => {
   const generatedId = useId();
-  const textareaId = id || generatedId;
+  const textareaId = id === undefined ? generatedId : id;
 
   return (
     <div className={`w-full ${wrapperClassName || ''}`}>
