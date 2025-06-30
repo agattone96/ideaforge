@@ -91,7 +91,7 @@ if (!window.matchMedia) {
     removeListener: jest.fn(), // deprecated
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    dispatchEvent: jest.fn(() => true), // Return boolean as required by the type
   })) as unknown as typeof window.matchMedia;
 }
 

@@ -10,11 +10,12 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react()],
-    define: {
-      // Expose environment variables to the client.
-      // This makes `process.env.API_KEY` available in the code.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY)
-    },
+    define: Object.keys(env)
+      .filter((key) => key.startsWith('VITE_'))
+      .reduce((acc, key) => {
+        acc[`process.env.${key}`] = JSON.stringify(env[key]);
+        return acc;
+      }, {} as Record<string, string>),
     // Server configuration for development
     server: {
       port: 3000, // You can specify a port

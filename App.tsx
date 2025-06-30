@@ -4,6 +4,7 @@ import { AppView, Idea, NotificationType } from './types';
 import * as localStorageService from './services/localStorageService';
 import { UndoRedoProvider, useUndoRedoContext } from './hooks/useUndoRedo';
 import type { Project } from './types';
+import * as logger from './services/logger';
 
 // Import components
 import LandingPage from './components/LandingPage';
@@ -24,6 +25,11 @@ import { useTheme } from './hooks/useTheme';
 import { ThemeName } from './styles/theme';
 
 const App: React.FC = () => {
+  // Debug: Log when App mounts
+  useEffect(() => {
+    logger.info('App mounted. Debug mode:', process.env.DEBUG);
+  }, []);
+
   // Main app state
   const [appView, setAppView] = useState<AppView>('landing');
   const [ideaToEdit, setIdeaToEdit] = useState<Idea | null>(null);

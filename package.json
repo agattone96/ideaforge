@@ -17,6 +17,7 @@
     "@fontsource/montserrat": "^5.2.6",
     "@fontsource/poppins": "^5.2.6",
     "@google/genai": "^1.7.0",
+    "@tailwindcss/postcss": "^4.1.11",
     "framer-motion": "^12.19.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
