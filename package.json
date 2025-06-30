@@ -21,6 +21,8 @@
     "jszip": "^3.10.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "i18next": "^25.2.1",
+    "react-i18next": "^15.5.3",
     "zod": "^3.25.67"
   },
   "devDependencies": {

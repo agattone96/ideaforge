@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'; // Use more explicit import for type augmentation
 import { jest, beforeEach, afterEach } from '@jest/globals';
+import './i18n';
 
 // Mock localStorage for tests
 const localStorageMock = (() => {
@@ -59,7 +60,7 @@ if (typeof (window as any).JSZip === 'undefined') {
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
