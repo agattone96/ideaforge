@@ -1,6 +1,6 @@
 
 import JSZip from 'jszip';
-import { Idea, Project } from '../types';
+import { Idea, Project } from '@/types';
 
 // Helper to convert Base64 to Blob
 export const base64ToBlob = (base64: string, type = 'application/octet-stream'): Blob => {

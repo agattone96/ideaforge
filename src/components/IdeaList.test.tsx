@@ -5,9 +5,9 @@ import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import IdeaList from './IdeaList';
-import { Project, Idea, NotificationType, Attachment } from '../types'; // Adjust path
-import * as localStorageService from '../services/localStorageService'; // Adjust path
-import * as fileService from '../services/fileService'; // Adjust path
+import { Project, Idea, NotificationType, Attachment } from '@/types'; // Adjust path
+import * as localStorageService from '@/services/localStorageService'; // Adjust path
+import * as fileService from '@/services/fileService'; // Adjust path
 
 // Mock child components and services
 jest.mock('./BlueprintCard', () => ({ item, type, onSelect, onDelete }: { item: Project | Idea, type: string, onSelect: () => void, onDelete: () => void}) => (
@@ -25,8 +25,8 @@ jest.mock('./Modal', () => ({ isOpen, title, children, onClose }: {isOpen: boole
     </div>
 ) : null);
 
-jest.mock('../services/localStorageService');
-jest.mock('../services/fileService');
+jest.mock('@/services/localStorageService');
+jest.mock('@/services/fileService');
 
 const mockOnEditIdea = jest.fn();
 const mockOnCreateNewIdea = jest.fn();

@@ -5,13 +5,13 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import IdeaEditor from './IdeaEditor';
-import { Project, Idea, Attachment } from '../types'; // Adjust path
-import * as localStorageService from '../services/localStorageService'; // Adjust path
-import { IdeaBoilerplate } from '../services/localStorageService'; // Correct import for IdeaBoilerplate
-import * as fileService from '../services/fileService'; // Adjust path
+import { Project, Idea, Attachment } from '@/types'; // Adjust path
+import * as localStorageService from '@/services/localStorageService'; // Adjust path
+import { IdeaBoilerplate } from '@/services/localStorageService'; // Correct import for IdeaBoilerplate
+import * as fileService from '@/services/fileService'; // Adjust path
 
 // Mock services
-jest.mock('../services/localStorageService', () => ({
+jest.mock('@/services/localStorageService', () => ({
   isAiEnabled: jest.fn<() => boolean>(() => true), 
   generateIdeaBoilerplate: jest.fn<() => Promise<localStorageService.IdeaBoilerplate>>(), // Use namespace if ambiguous
   summarizeIdea: jest.fn<() => Promise<string>>(),
@@ -19,7 +19,7 @@ jest.mock('../services/localStorageService', () => ({
   updateIdeaInProject: jest.fn<() => void>(),
   getProjectById: jest.fn<() => Project | undefined>(),
 }));
-jest.mock('../services/fileService', () => ({
+jest.mock('@/services/fileService', () => ({
   exportIdea: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readFileAsText: jest.fn<() => Promise<string>>().mockResolvedValue("mock text content"),
   readFileAsBase64: jest.fn<() => Promise<string>>().mockResolvedValue("data:image/png;base64,mockbase64"),

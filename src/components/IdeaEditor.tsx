@@ -3,13 +3,13 @@
 import React, { useState, useEffect, useCallback, useRef, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import JSZip from 'jszip';
-import { Idea, Attachment, Project } from '../types';
+import { Idea, Attachment, Project } from '@/types';
 import Button from './Button';
 import TextInput from './TextInput';
 import TextArea from './TextArea';
-import * as localStorageService from '../services/localStorageService';
-import { exportIdea, readFileAsText, readFileAsBase64, sanitizeFilename, base64ToBlob } from '../services/fileService';
-import { exportViewAsPdfZine } from '../utils/zineExporter'; // Import Zine Exporter
+import * as localStorageService from '@/services/localStorageService';
+import { exportIdea, readFileAsText, readFileAsBase64, sanitizeFilename, base64ToBlob } from '@/services/fileService';
+import { exportViewAsPdfZine } from '@/utils/zineExporter'; // Import Zine Exporter
 import { SparklesIcon, DocumentArrowDownIcon, DocumentTextIcon, PhotoIcon, DocumentIcon, TrashIcon, ArrowLeftIcon, PlusCircleIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentChartBarIcon } from './icons';
 
 interface IdeaEditorProps {

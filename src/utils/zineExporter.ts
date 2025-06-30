@@ -1,11 +1,11 @@
 // utils/zineExporter.ts
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import * as logger from '../services/logger';
+import * as logger from '@/services/logger';
 
 // Custom hook for sorting/filtering ideas
 import { useMemo } from 'react';
-import { Idea } from '../types';
+import { Idea } from '@/types';
 
 interface ZineExportOptions {
   filename?: string;
