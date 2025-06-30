@@ -10,8 +10,10 @@ body {
   background-color: #0b0c26;
   color: #ffffff;
   font-family: 'Poppins', sans-serif;
+  /* Ensure the app fills the viewport on mobile without blocking vertical scroll */
+  min-height: 100dvh;
   min-height: 100vh;
-  overflow: hidden; /* Prevent scrollbars on the landing page */
+  overflow-x: hidden;
 }
 
 /* Animated starfield background */
