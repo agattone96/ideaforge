@@ -1,4 +1,6 @@
 import React from 'react';
+// When VITE_REACT_PROFILE=true the Vite config aliases this import to
+// `react-dom/profiling` so the React Profiler can be used.
 import ReactDOM from 'react-dom/client';
 import './src/index.css';
 import App from './App';

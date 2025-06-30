@@ -64,6 +64,7 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 ## Development Workflow
 - **Start Dev Server:** `npm run dev`
 - **Build for Production:** `npm run build`
+- **Analyze Bundle:** `npm run analyze` (generates bundle stats with source-map-explorer)
 - **Lint:** `npm run lint`
 - **Format:** `npm run format`
 - **Test:** `npm test`
@@ -71,6 +72,9 @@ IdeaForge Local is a privacy-first, local-only ideation and project management t
 
 ## Continuous Integration
 A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting, and tests on every push to ensure code quality.
+
+## React Profiler
+To profile component performance, set `VITE_REACT_PROFILE=true` in your `.env` file and run the app in development. This loads the profiling build of React so you can use the React DevTools Profiler.
 
 ## Contributing
 Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See `CONTRIBUTING.md` for guidelines (if available).

@@ -8,8 +8,12 @@ export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
   const env = loadEnv(mode, '.', '');
+  const enableProfiler = env.VITE_REACT_PROFILE === 'true';
   return {
     plugins: [react()],
+    resolve: {
+      alias: enableProfiler ? { 'react-dom/client': 'react-dom/profiling' } : {}
+    },
     define: {
       // Expose environment variables to the client.
       // This makes `process.env.API_KEY` available in the code.
