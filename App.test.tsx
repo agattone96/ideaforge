@@ -1,5 +1,3 @@
-
-
 import React, { useEffect } from 'react';
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -7,9 +5,10 @@ import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globa
 import App from './App'; // Adjust path as necessary
 import ErrorBoundary from './components/ErrorBoundary'; // Import ErrorBoundary
 
-
 // Mock child components that might have complex logic or side effects
-jest.mock('./components/WelcomeScreen', () => () => <div data-testid="welcome-screen">Welcome Screen</div>);
+jest.mock('./components/WelcomeScreen', () => () => (
+  <div data-testid="welcome-screen">Welcome Screen</div>
+));
 jest.mock('./components/Workbench', () => () => <div data-testid="workbench">Workbench</div>);
 // Add mocks for other components like IdeaList, IdeaEditor, SettingsModal, ContactPanel, NotificationArea if they cause issues or for isolation
 
@@ -19,8 +18,8 @@ describe('App Component', () => {
     localStorage.clear();
     // Mock navigator.onLine
     Object.defineProperty(navigator, 'onLine', {
-        configurable: true,
-        value: true,
+      configurable: true,
+      value: true,
     });
   });
 
@@ -29,7 +28,7 @@ describe('App Component', () => {
     render(<App />);
     // Wait for initial loader to hide
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 600)); // Wait for initialLoadComplete timeout + buffer
+      await new Promise((resolve) => setTimeout(resolve, 600)); // Wait for initialLoadComplete timeout + buffer
     });
     expect(screen.getByTestId('welcome-screen')).toBeInTheDocument();
   });
@@ -37,9 +36,9 @@ describe('App Component', () => {
   test('renders Workbench if not the first visit', async () => {
     localStorage.setItem('IDEA_FORGE_LOCAL_FIRST_VISIT_DONE', 'true');
     render(<App />);
-     // Wait for initial loader to hide
+    // Wait for initial loader to hide
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
     });
     expect(screen.getByTestId('workbench')).toBeInTheDocument();
     expect(screen.queryByTestId('welcome-screen')).not.toBeInTheDocument();
@@ -49,7 +48,7 @@ describe('App Component', () => {
     localStorage.setItem('IDEA_FORGE_LOCAL_FIRST_VISIT_DONE', 'true');
     render(<App />);
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
     });
     expect(screen.getByLabelText('Open Settings')).toBeInTheDocument();
     expect(screen.getByLabelText('Open Contact Panel')).toBeInTheDocument();
@@ -61,17 +60,16 @@ describe('App Component', () => {
     const statusElement = document.getElementById('connection-status');
     expect(statusElement).toBeInTheDocument();
     // Allow useEffect to run
-     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 100)); // Short wait for useEffect
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Short wait for useEffect
     });
     expect(statusElement?.textContent).toBe('Cosmic Link: Stable');
   });
 
   describe('ErrorBoundary Integration', () => {
     // Mock console.error to prevent Jest from outputting caught errors during tests
-     
-    let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
 
+    let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
 
     beforeEach(() => {
       consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -83,7 +81,8 @@ describe('App Component', () => {
 
     test('ErrorBoundary catches errors and displays fallback UI', () => {
       const ThrowErrorComponent = () => {
-        useEffect(() => { // Throw error after initial render in an effect
+        useEffect(() => {
+          // Throw error after initial render in an effect
           throw new Error('Test error from child');
         }, []);
         return null;

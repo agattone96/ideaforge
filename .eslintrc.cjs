@@ -22,12 +22,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'prettier',
   ],
-  plugins: [
-    'react',
-    '@typescript-eslint',
-    'react-hooks',
-    'jsx-a11y',
-  ],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'jsx-a11y'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],

@@ -29,7 +29,7 @@ const PhraseRotator: React.FC<PhraseRotatorProps> = ({ phrases, interval = 3000,
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
           className="absolute inset-0 flex items-center justify-center text-lg md:text-xl text-amber font-sans font-semibold"
         >
           {phrases[currentIndex]}
