@@ -1,6 +1,6 @@
 // rendering/CosmicCanvas.tsx
 import React from 'react';
-import { useTheme } from '../hooks/useTheme';
+import { useTheme } from '@/hooks/useTheme';
 
 const CosmicCanvas: React.FC<{className?: string}> = ({ className }) => {
   const { currentThemeProperties } = useTheme();

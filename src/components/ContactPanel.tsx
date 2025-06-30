@@ -5,7 +5,7 @@ import Button from './Button';
 import TextInput from './TextInput';
 import TextArea from './TextArea';
 import { XMarkIcon, PaperAirplaneIcon } from './icons';
-import * as logger from '../services/logger';
+import * as logger from '@/services/logger';
 
 interface ContactPanelProps {
   isOpen: boolean;

@@ -1,19 +1,19 @@
 // components/IdeaList.tsx (Project File View)
 import React, { useState, useRef, ChangeEvent, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Project, Idea, Attachment } from '../types';
+import { Project, Idea, Attachment } from '@/types';
 import Button from './Button';
 import Modal from './Modal';
-import * as fileService from '../services/fileService';
-import { exportViewAsPdfZine } from '../utils/zineExporter'; // Import Zine Exporter
+import * as fileService from '@/services/fileService';
+import { exportViewAsPdfZine } from '@/utils/zineExporter'; // Import Zine Exporter
 import BlueprintCard from './BlueprintCard'; 
 import { 
     PlusCircleIcon, ArrowLeftIcon, DocumentDuplicateIcon, DocumentTextIcon,
     TrashIcon, PhotoIcon, ArrowUpTrayIcon, DocumentIcon, ArrowDownTrayIcon, PaperClipIcon,
     DocumentChartBarIcon // New icon
 } from './icons'; 
-import { staggerContainer, staggerItem } from '../motion/variants';
-import { useSortedIdeas } from '../utils/zineExporter';
+import { staggerContainer, staggerItem } from '@/motion/variants';
+import { useSortedIdeas } from '@/utils/zineExporter';
 
 interface IdeaListProps {
   project: Project;

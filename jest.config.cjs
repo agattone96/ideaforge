@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'jsdom',
-  roots: ['<rootDir>/src', '<rootDir>/components', '<rootDir>/services', '<rootDir>/hooks', '<rootDir>/utils'],
+  roots: ['<rootDir>/src'],
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   transform: {
     '^.+\\.tsx?$': [

@@ -1,6 +1,6 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
-import { Project, Idea, SampleProject, Attachment } from '../types';
-import { API_KEY } from '../src/utils/env';
+import { Project, Idea, SampleProject, Attachment } from '@/types';
+import { API_KEY } from '@/utils/env';
 
 // Initialize Gemini AI Client
 let ai: GoogleGenAI | null = null;
