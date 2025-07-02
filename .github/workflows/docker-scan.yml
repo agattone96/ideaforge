@@ -1,3 +1,4 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: Docker Security Scan
 
 on:
@@ -5,9 +6,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+concurrency:
+  group: docker-scan-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  scan:
+  trivy-scan:
     name: Scan Docker Image with Trivy
     runs-on: ubuntu-latest
 
@@ -18,10 +24,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t ideaforge:latest .
 
-      - name: Scan image
+      - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@v0.9
         with:
           image-ref: ideaforge:latest
           format: table
           exit-code: 1
-          vuln-type: 'os,library'
+          vuln-type: os,library
