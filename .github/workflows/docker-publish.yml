@@ -1,12 +1,19 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: Docker Publish
 
 on:
   push:
     tags: [ 'v*.*.*' ]
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   publish:
-    name: Build & Push to Docker Hub
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
 
     steps:
@@ -19,15 +26,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and Push
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: |
-            ${{
-              secrets.DOCKERHUB_USERNAME
-            }}/ideaforge:latest
-            ${{
-              secrets.DOCKERHUB_USERNAME
-            }}/ideaforge:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ideaforge:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ideaforge:${{ github.ref_name }}
