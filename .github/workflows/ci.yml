@@ -1,20 +1,22 @@
-name: Continuous Integration
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
+name: CI
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   build-and-test:
     name: Build & Test (Node.js ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x, 18.x, 20.x]
@@ -38,9 +40,9 @@ jobs:
       - name: Run tests with coverage
         run: npm test -- --coverage
 
-      - name: Upload coverage report
+      - name: Upload coverage artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.node-version }}
+          name: coverage-report
           path: coverage/
