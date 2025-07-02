@@ -1,28 +1,36 @@
-name: Browser Compatibility
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
+name: Browser Compatibility Test
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+concurrency:
+  group: browser-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  cross-browser-test:
+  testcafe:
+    name: Run TestCafe Cross-Browser Tests
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: npm
 
-      - name: Install tests
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run TestCafe across browsers
+      - name: Run TestCafe on Chrome & Firefox
         uses: testcafe/testcafe-action@v1
         with:
           browsers: 'chrome:headless,firefox:headless'
