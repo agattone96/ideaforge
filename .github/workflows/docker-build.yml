@@ -1,0 +1,34 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build \
+            --tag ideaforge:${{ github.sha }} \
+            --file Dockerfile .
+
+      - name: Save image artifact
+        run: |
+          mkdir -p image-artifact
+          docker save ideaforge:${{ github.sha }} \
+            | gzip > image-artifact/ideaforge_${{ github.sha }}.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: image-artifact/
