@@ -1,0 +1,29 @@
+name: Browser Compatibility
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cross-browser-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: npm
+
+      - name: Install tests
+        run: npm ci
+
+      - name: Run TestCafe across browsers
+        uses: testcafe/testcafe-action@v1
+        with:
+          browsers: 'chrome:headless,firefox:headless'
+          src: 'tests/**/*.js'
