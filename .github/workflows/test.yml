@@ -1,19 +1,25 @@
-name: Test
+name: Test Suite
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
+    name: Test (Node.js ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Detect package manager
@@ -27,7 +33,7 @@ jobs:
             echo "manager=npm" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -35,30 +41,42 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ "${{ steps.detect.outputs.manager }}" = "pnpm" ]; then
-            corepack enable
-            pnpm install --frozen-lockfile
-          elif [ "${{ steps.detect.outputs.manager }}" = "yarn" ]; then
-            yarn install --frozen-lockfile
-          else
-            npm ci
-          fi
+          case "${{ steps.detect.outputs.manager }}" in
+            pnpm)
+              corepack enable
+              pnpm install --frozen-lockfile
+              ;;
+            yarn)
+              yarn install --frozen-lockfile
+              ;;
+            *)
+              npm ci
+              ;;
+          esac
 
-      - name: Run lint and tests
+      - name: Lint code
         run: |
           if [ "${{ steps.detect.outputs.manager }}" = "pnpm" ]; then
             pnpm run lint
-            pnpm test -- --coverage
           elif [ "${{ steps.detect.outputs.manager }}" = "yarn" ]; then
             yarn lint
-            yarn test --coverage
           else
             npm run lint
+          fi
+
+      - name: Run tests with coverage
+        run: |
+          if [ "${{ steps.detect.outputs.manager }}" = "pnpm" ]; then
+            pnpm test -- --coverage
+          elif [ "${{ steps.detect.outputs.manager }}" = "yarn" ]; then
+            yarn test --coverage
+          else
             npm test -- --coverage
           fi
 
-      - name: Upload coverage
+      - name: Upload coverage report
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.node-version }}
-          path: coverage
+          path: coverage/
