@@ -1,19 +1,26 @@
-name: Build Docs
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
+name: Docs Build
 
 on:
   push:
-    paths:
-      - 'docs/**'
+    paths: [ 'docs/**' ]
   workflow_dispatch:
+concurrency:
+  group: docs-build-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  build:
+  build-docs:
+    name: Build Documentation Site
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
@@ -22,5 +29,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build documentation
+      - name: Build docs
         run: npm run docs:build
+
+      - name: Upload docs artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-dist
+          path: docs/dist
