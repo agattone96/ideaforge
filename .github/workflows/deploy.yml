@@ -1,31 +1,41 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: Deploy to Production
 
 on:
   push:
     branches: [ main ]
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  build-and-deploy:
+    name: Build Application & Deploy
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: npm
 
-      - name: Install & Build
-        run: |
-          npm ci
-          npm run build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
-        with:
-          publish-dir: ./build
-          production-deploy: true
+        env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          publish-dir: './build'
+          production-deploy: true
