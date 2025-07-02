@@ -1,0 +1,17 @@
+name: Coverage Comment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration", "Test Suite"]
+    types: [completed]
+
+jobs:
+  comment:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to Codecov & Comment
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
