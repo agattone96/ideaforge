@@ -1,3 +1,4 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: Docker Build
 
 on:
@@ -5,30 +6,31 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+concurrency:
+  group: docker-build-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: Build Docker Image
+    name: Build & Archive Docker Image
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build image
-        run: |
-          docker build \
-            --tag ideaforge:${{ github.sha }} \
-            --file Dockerfile .
+      - name: Build Docker image
+        run: docker build -t ideaforge:${{ github.sha }} .
 
-      - name: Save image artifact
+      - name: Save image as artifact
         run: |
-          mkdir -p image-artifact
-          docker save ideaforge:${{ github.sha }} \
-            | gzip > image-artifact/ideaforge_${{ github.sha }}.tar.gz
+          mkdir -p artifacts
+          docker save ideaforge:${{ github.sha }} | gzip > artifacts/ideaforge_${{ github.sha }}.tar.gz
 
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: docker-image
-          path: image-artifact/
+          name: docker-image-${{ github.sha }}
+          path: artifacts/
