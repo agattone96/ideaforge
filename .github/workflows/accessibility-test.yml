@@ -1,0 +1,32 @@
+name: Accessibility Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  axe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start app
+        run: npm run start &> /dev/null &
+
+      - name: Run axe-core tests
+        uses: dequelabs/axe-action@v1
+        with:
+          url: http://localhost:3000
+          options: '--saveResults'
