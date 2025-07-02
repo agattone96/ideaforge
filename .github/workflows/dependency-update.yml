@@ -3,11 +3,13 @@ name: Dependency Update
 
 on:
   schedule:
-    - cron: '0 4 * * 0'  # weekly on Sunday at 04:00 UTC
+    - cron: '0 4 * * 0'    # weekly on Sunday at 04:00 UTC
   workflow_dispatch:
+
 concurrency:
   group: dependency-update
   cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -39,7 +41,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: chore(deps): bump dependencies
+          commit-message: "chore(deps): bump dependencies"
           branch: dependency-update
-          title: chore(deps): scheduled dependency update
-          labels: dependencies, automated
+          title: "chore(deps): scheduled dependency update"
+          labels: "dependencies, automated"
