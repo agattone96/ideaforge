@@ -1,30 +1,36 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: Design & Style Lint
 
 on:
   push:
-    paths:
-      - '**/*.css'
-      - '**/*.scss'
+    branches: [ main ]
+    paths: [ '**/*.css', '**/*.scss' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ '**/*.css', '**/*.scss' ]
+concurrency:
+  group: design-lint-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
   stylelint:
-    name: Lint CSS/SCSS
+    name: Lint CSS/SCSS Files
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout styles
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: npm
 
-      - name: Install stylelint
-        run: |
-          npm ci
-          npm install stylelint stylelint-config-standard --no-save
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run stylelint
+      - name: Run Stylelint
         run: npx stylelint "**/*.{css,scss}"
