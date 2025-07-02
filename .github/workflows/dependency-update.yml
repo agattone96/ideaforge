@@ -1,0 +1,40 @@
+name: Dependency Update
+
+on:
+  schedule:
+    - cron: '0 4 * * 0'  # Weekly on Sunday at 04:00 UTC
+
+concurrency:
+  group: dependency-update
+  cancel-in-progress: true
+
+jobs:
+  bump-dependencies:
+    name: Bump & PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: npm
+
+      - name: Install npm-check-updates
+        run: npm install -g npm-check-updates
+
+      - name: Bump dependencies
+        run: ncu -u
+
+      - name: Install upgraded dependencies
+        run: npm ci
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: chore(deps): bump dependencies
+          branch: dependency-update
+          title: chore(deps): scheduled dependency update
+          labels: dependencies, automated
