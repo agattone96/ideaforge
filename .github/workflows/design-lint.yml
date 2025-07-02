@@ -1,0 +1,30 @@
+name: Design & Style Lint
+
+on:
+  push:
+    paths:
+      - '**/*.css'
+      - '**/*.scss'
+
+jobs:
+  stylelint:
+    name: Lint CSS/SCSS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout styles
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: npm
+
+      - name: Install stylelint
+        run: |
+          npm ci
+          npm install stylelint stylelint-config-standard --no-save
+
+      - name: Run stylelint
+        run: npx stylelint "**/*.{css,scss}"
