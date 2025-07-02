@@ -21,19 +21,21 @@ const GlowCard: React.FC<GlowCardProps> = ({
   padding = 'p-6',
   prefersReducedMotion = false,
 }) => {
-  const cardVariants: Variants = prefersReducedMotion ? {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.1 } },
-    hover: {},
-  } : {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-    hover: { 
-      scale: 1.02, 
-      boxShadow: `0 0 15px ${glowColor || 'var(--color-glow-primary)'}, 0 0 25px ${glowColor || 'var(--color-glow-secondary)'}`,
-      transition: { duration: 0.3, ease: 'circOut' }
-    },
-  };
+  const cardVariants: Variants = prefersReducedMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.1 } },
+        hover: {},
+      }
+    : {
+        initial: { opacity: 0, y: 10 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+        hover: {
+          scale: 1.02,
+          boxShadow: `0 0 15px ${glowColor || 'var(--color-glow-primary)'}, 0 0 25px ${glowColor || 'var(--color-glow-secondary)'}`,
+          transition: { duration: 0.3, ease: 'circOut' },
+        },
+      };
 
   const defaultGlowClasses = glowColor ? '' : 'shadow-glow-accent-sm hover:shadow-glow-accent-md';
 
@@ -51,14 +53,25 @@ const GlowCard: React.FC<GlowCardProps> = ({
       variants={cardVariants}
       initial="initial"
       animate="animate"
-      whileHover={hoverEffect && !prefersReducedMotion ? "hover" : undefined}
-      style={hoverEffect && glowColor && !prefersReducedMotion ? {
-        // Custom glow if glowColor is provided directly, otherwise Tailwind handles it
-      } : {}}
+      whileHover={hoverEffect && !prefersReducedMotion ? 'hover' : undefined}
+      style={
+        hoverEffect && glowColor && !prefersReducedMotion
+          ? {
+              // Custom glow if glowColor is provided directly, otherwise Tailwind handles it
+            }
+          : {}
+      }
     >
       {children}
     </motion.div>
   );
 };
+
+// Skeleton component for GlowCard
+export const GlowCardSkeleton: React.FC = () => (
+  <div className="bg-white rounded shadow p-4 ring-2 ring-blue-300 hover:ring-4 transition">
+    {}
+  </div>
+);
 
 export default GlowCard;

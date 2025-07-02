@@ -1,4 +1,3 @@
-// jest.config.cjs
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'jsdom',
@@ -16,6 +15,7 @@ module.exports = {
     ],
   },
   moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
     '^@google/genai$': '<rootDir>/node_modules/@google/genai/dist/index.cjs',

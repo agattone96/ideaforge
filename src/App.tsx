@@ -1,27 +1,29 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { AppView, Idea, NotificationType } from '@/types';
-import * as localStorageService from '@/services/localStorageService';
 import { UndoRedoProvider, useUndoRedoContext } from '@/hooks/useUndoRedo';
-import type { Project } from '@/types';
-
-// Import components
-import LandingPage from '@/components/LandingPage';
-import Workbench from '@/components/Workbench';
-import IdeaList from '@/components/IdeaList';
-import IdeaEditor from '@/components/IdeaEditor';
-import NotificationArea from '@/components/NotificationArea';
-import SettingsModal from '@/components/SettingsModal';
-import ContactPanel from '@/components/ContactPanel';
-import Button from '@/components/Button';
-import CosmicCanvas from '@/rendering/CosmicCanvas';
 import { CogIcon, EnvelopeIcon } from '@/components/icons';
 import Modal from '@/components/Modal';
+import Button from '@/components/Button';
 import AppHeader from '@/components/AppHeader';
+import type { Project } from '@/types';
+import * as localStorageService from '@/services/localStorageService';
+import { AppView, Idea, NotificationType } from '@/types';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Import hooks and types for theme
 import { useTheme } from '@/hooks/useTheme';
 import { ThemeName } from '@/styles/theme';
+// Lazy-load heavy renderers and UI
+const CosmicCanvas = lazy(() => import('@/rendering/CosmicCanvas'));
+const NotificationArea = lazy(() => import('@/components/NotificationArea'));
+
+// Lazy-load main views and panels for performance
+const LandingPage = lazy(() => import('@/components/LandingPage'));
+const Workbench = lazy(() => import('@/components/Workbench'));
+const IdeaList = lazy(() => import('@/components/IdeaList'));
+const IdeaEditor = lazy(() => import('@/components/IdeaEditor'));
+const SettingsModal = lazy(() => import('@/components/SettingsModal'));
+const ContactPanel = lazy(() => import('@/components/ContactPanel'));
 
 const App: React.FC = () => {
   // Main app state
@@ -37,8 +39,15 @@ const App: React.FC = () => {
 
   // Theme Management
   const { currentThemeName, setTheme, availableThemes } = useTheme();
-  const { state: undoRedoState, set: setProjectsState, undo, redo, canUndo, canRedo } = useUndoRedoContext();
-  const {projects} = undoRedoState.present;
+  const {
+    state: undoRedoState,
+    set: setProjectsState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedoContext();
+  const { projects } = undoRedoState.present;
 
   // Load accessibility settings on startup
   useEffect(() => {
@@ -59,13 +68,16 @@ const App: React.FC = () => {
     setPrefersReducedMotion(enabled);
   };
 
-  const addNotification = useCallback((message: string, type: NotificationType['type'] = 'info') => {
-    const newNotification: NotificationType = { id: crypto.randomUUID(), message, type };
-    setNotifications(current => [...current, newNotification]);
-  }, []);
+  const addNotification = useCallback(
+    (message: string, type: NotificationType['type'] = 'info') => {
+      const newNotification: NotificationType = { id: crypto.randomUUID(), message, type };
+      setNotifications((current) => [...current, newNotification]);
+    },
+    []
+  );
 
   const dismissNotification = useCallback((id: string) => {
-    setNotifications(current => current.filter(n => n.id !== id));
+    setNotifications((current) => current.filter((n) => n.id !== id));
   }, []);
 
   const handleEnterForge = () => setAppView('projectManager');
@@ -83,7 +95,7 @@ const App: React.FC = () => {
   };
 
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
-  const currentProject = projects.find(p => p.id === currentProjectId) || null;
+  const currentProject = projects.find((p) => p.id === currentProjectId) || null;
 
   // Update onBackToProjects to clear currentProjectId
   const handleBackToProjects = useCallback(() => {
@@ -109,87 +121,127 @@ const App: React.FC = () => {
   }, []);
 
   // Handler to create a new project
-  const handleCreateProject = useCallback((projectName: string) => {
-    const newProject: Project = {
-      id: crypto.randomUUID(),
-      name: projectName,
-      ideas: [],
-      attachments: [],
-      logo: undefined,
-      createdAt: new Date().toISOString(),
-      isFavorite: false,
-    };
-    const updatedProjects = [newProject, ...projects];
-    setProjectsState({ projects: updatedProjects });
-    localStorageService.saveProjects(updatedProjects);
-    setCurrentProjectId(newProject.id);
-    setAppView('ideaList');
-    addNotification(`Constellation "${newProject.name}" successfully ignited!`, 'success');
-  }, [projects, setProjectsState, addNotification]);
+  const handleCreateProject = useCallback(
+    (projectName: string) => {
+      const newProject: Project = {
+        id: crypto.randomUUID(),
+        name: projectName,
+        ideas: [],
+        attachments: [],
+        logo: undefined,
+        createdAt: new Date().toISOString(),
+        isFavorite: false,
+      };
+      const updatedProjects = [newProject, ...projects];
+      setProjectsState({ projects: updatedProjects });
+      localStorageService.saveProjects(updatedProjects);
+      setCurrentProjectId(newProject.id);
+      setAppView('ideaList');
+      addNotification(`Constellation "${newProject.name}" successfully ignited!`, 'success');
+    },
+    [projects, setProjectsState, addNotification]
+  );
 
   // Handler to update a project (e.g., add/edit idea)
-  const handleUpdateProject = useCallback((updatedProject: Project) => {
-    const updatedProjects = projects.map(p => p.id === updatedProject.id ? updatedProject : p);
-    setProjectsState({ projects: updatedProjects });
-    localStorageService.saveProjects(updatedProjects);
-    setCurrentProjectId(updatedProject.id);
-  }, [projects, setProjectsState]);
+  const handleUpdateProject = useCallback(
+    (updatedProject: Project) => {
+      const updatedProjects = projects.map((p) =>
+        p.id === updatedProject.id ? updatedProject : p
+      );
+      setProjectsState({ projects: updatedProjects });
+      localStorageService.saveProjects(updatedProjects);
+      setCurrentProjectId(updatedProject.id);
+    },
+    [projects, setProjectsState]
+  );
 
   // Handler to delete a project
-  const handleDeleteProject = useCallback((projectId: string) => {
-    const updatedProjects = projects.filter(p => p.id !== projectId);
-    setProjectsState({ projects: updatedProjects });
-    localStorageService.saveProjects(updatedProjects);
-    setCurrentProjectId(null);
-    setAppView('projectManager');
-    addNotification('Constellation has faded into the void.', 'success');
-  }, [projects, setProjectsState, addNotification]);
+  const handleDeleteProject = useCallback(
+    (projectId: string) => {
+      const updatedProjects = projects.filter((p) => p.id !== projectId);
+      setProjectsState({ projects: updatedProjects });
+      localStorageService.saveProjects(updatedProjects);
+      setCurrentProjectId(null);
+      setAppView('projectManager');
+      addNotification('Constellation has faded into the void.', 'success');
+    },
+    [projects, setProjectsState, addNotification]
+  );
 
   // Handler to add/edit/delete ideas within a project
-  const handleSaveIdea = useCallback((updatedProject: Project) => {
-    handleUpdateProject(updatedProject);
-    setIdeaToEdit(null);
-    setAppView('ideaList');
-  }, [handleUpdateProject]);
+  const handleSaveIdea = useCallback(
+    (updatedProject: Project) => {
+      handleUpdateProject(updatedProject);
+      setIdeaToEdit(null);
+      setAppView('ideaList');
+    },
+    [handleUpdateProject]
+  );
 
   // Pass new handlers and state to children
   const renderView = () => {
     switch (appView) {
       case 'landing':
-        return <LandingPage key="landing" onEnterForge={handleEnterForge} onTryDemo={handleTryDemo} />;
+        return (
+          <LandingPage key="landing" onEnterForge={handleEnterForge} onTryDemo={handleTryDemo} />
+        );
       case 'projectManager':
-        return <Workbench 
-          key="workbench"
-          projects={projects}
-          onProjectSelected={(project) => { setCurrentProjectId(project.id); setAppView('ideaList'); }}
-          onCreateProject={handleCreateProject}
-          onDeleteProject={handleDeleteProject}
-          addNotification={addNotification}
-          onQuickNewIdea={(project) => { setCurrentProjectId(project.id); setAppView('ideaEditor'); }}
-        />;
+        return (
+          <Workbench
+            key="workbench"
+            projects={projects}
+            onProjectSelected={(project) => {
+              setCurrentProjectId(project.id);
+              setAppView('ideaList');
+            }}
+            onCreateProject={handleCreateProject}
+            onDeleteProject={handleDeleteProject}
+            addNotification={addNotification}
+            onQuickNewIdea={(project) => {
+              setCurrentProjectId(project.id);
+              setAppView('ideaEditor');
+            }}
+          />
+        );
       case 'ideaList':
-        if (!currentProject) { handleBackToProjects(); return null; }
-        return <IdeaList 
-          key={`ideelist-${currentProject.id}`}
-          project={currentProject}
-          onEditIdea={handleEditIdea}
-          onCreateNewIdea={handleCreateNewIdea}
-          onBackToProjects={handleBackToProjects}
-          addNotification={addNotification}
-          onUpdateProject={handleUpdateProject}
-        />;
+        if (!currentProject) {
+          handleBackToProjects();
+          return null;
+        }
+        return (
+          <IdeaList
+            key={`ideelist-${currentProject.id}`}
+            project={currentProject}
+            onEditIdea={handleEditIdea}
+            onCreateNewIdea={handleCreateNewIdea}
+            onBackToProjects={handleBackToProjects}
+            addNotification={addNotification}
+            onUpdateProject={handleUpdateProject}
+          />
+        );
       case 'ideaEditor':
-        if (!currentProject) { handleBackToProjects(); return null; }
-        return <IdeaEditor 
-          key={`ideaeditor-${ideaToEdit?.id || 'new'}`}
-          project={currentProject}
-          ideaToEdit={ideaToEdit}
-          onSave={handleSaveIdea}
-          onCancel={handleBackToProjects}
-          addNotification={addNotification}
-        />;
+        if (!currentProject) {
+          handleBackToProjects();
+          return null;
+        }
+        return (
+          <IdeaEditor
+            key={`ideaeditor-${ideaToEdit?.id || 'new'}`}
+            project={currentProject}
+            ideaToEdit={ideaToEdit}
+            onSave={handleSaveIdea}
+            onCancel={handleBackToProjects}
+            addNotification={addNotification}
+          />
+        );
       default:
-        return <LandingPage key="default-landing" onEnterForge={handleEnterForge} onTryDemo={handleTryDemo} />;
+        return (
+          <LandingPage
+            key="default-landing"
+            onEnterForge={handleEnterForge}
+            onTryDemo={handleTryDemo}
+          />
+        );
     }
   };
 
@@ -200,39 +252,71 @@ const App: React.FC = () => {
   return (
     <UndoRedoProvider initialState={{ projects: initialProjects }}>
       <div className="font-body text-theme-text-primary min-h-screen">
-        <CosmicCanvas />
+        <Suspense fallback={null}>
+          <CosmicCanvas />
+        </Suspense>
         <AppHeader />
         <main id="main-content" className="relative z-10">
-          <AnimatePresence mode="wait">
-            {renderView()}
-          </AnimatePresence>
+          <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+            <AnimatePresence mode="wait">{renderView()}</AnimatePresence>
+          </Suspense>
         </main>
-        {/* Undo/Redo Controls */}
+        {}
         <div className="fixed bottom-4 left-4 z-[60] flex gap-2">
-          <Button variant="glow" size="md" onClick={undo} disabled={!canUndo} aria-label="Undo" title="Undo (Ctrl+Z)">
+          <Button
+            variant="glow"
+            size="md"
+            onClick={undo}
+            disabled={!canUndo}
+            aria-label="Undo"
+            title="Undo (Ctrl+Z)"
+          >
             ⎌ Undo
           </Button>
-          <Button variant="glow" size="md" onClick={redo} disabled={!canRedo} aria-label="Redo" title="Redo (Ctrl+Y)">
+          <Button
+            variant="glow"
+            size="md"
+            onClick={redo}
+            disabled={!canRedo}
+            aria-label="Redo"
+            title="Redo (Ctrl+Y)"
+          >
             ↻ Redo
           </Button>
         </div>
         {appView !== 'landing' && (
           <>
             <div className="fixed bottom-4 right-[calc(4rem+1rem)] z-[60]">
-              <Button variant="glow" size="lg" className="rounded-full !p-3 shadow-lg" onClick={() => setIsSettingsModalOpen(true)} aria-label="Open Settings" prefersReducedMotion={prefersReducedMotion}>
+              <Button
+                variant="glow"
+                size="lg"
+                className="rounded-full !p-3 shadow-lg"
+                onClick={() => setIsSettingsModalOpen(true)}
+                aria-label="Open Settings"
+                prefersReducedMotion={prefersReducedMotion}
+              >
                 <CogIcon className="w-6 h-6" />
               </Button>
             </div>
             <div className="fixed bottom-4 right-4 z-[60]">
-              <Button variant="glow" size="lg" className="rounded-full !p-3 shadow-lg" onClick={() => setIsContactPanelOpen(true)} aria-label="Open Contact Panel" prefersReducedMotion={prefersReducedMotion}>
+              <Button
+                variant="glow"
+                size="lg"
+                className="rounded-full !p-3 shadow-lg"
+                onClick={() => setIsContactPanelOpen(true)}
+                aria-label="Open Contact Panel"
+                prefersReducedMotion={prefersReducedMotion}
+              >
                 <EnvelopeIcon className="w-6 h-6" />
               </Button>
             </div>
           </>
         )}
 
-        <NotificationArea notifications={notifications} onDismiss={dismissNotification} />
-        
+        <Suspense fallback={null}>
+          <NotificationArea notifications={notifications} onDismiss={dismissNotification} />
+        </Suspense>
+
         <SettingsModal
           isOpen={isSettingsModalOpen}
           onClose={() => setIsSettingsModalOpen(false)}
@@ -242,8 +326,10 @@ const App: React.FC = () => {
           availableThemes={availableThemes}
           prefersReducedMotion={prefersReducedMotion}
           onReducedMotionChange={handleReducedMotionChange}
-        />
-        
+        >
+          <div className="p-4">Settings content</div>
+        </SettingsModal>
+
         <ContactPanel
           isOpen={isContactPanelOpen}
           onClose={() => setIsContactPanelOpen(false)}
@@ -251,11 +337,24 @@ const App: React.FC = () => {
         />
 
         {showOnboarding && (
-          <Modal isOpen={showOnboarding} onClose={() => setShowOnboarding(false)} title="Welcome to IdeaForge!">
+          <Modal
+            isOpen={showOnboarding}
+            onClose={() => setShowOnboarding(false)}
+            title="Welcome to IdeaForge!"
+          >
             <div className="space-y-4">
               <h2 className="text-xl font-bold">Welcome to IdeaForge 🚀</h2>
-              <p>Start by creating your first constellation (project) or try the demo. Use the settings to personalize your experience. Need help? Click the contact button!</p>
-              <Button variant="default" onClick={() => setShowOnboarding(false)} aria-label="Close onboarding">Get Started</Button>
+              <p>
+                Start by creating your first constellation (project) or try the demo. Use the
+                settings to personalize your experience. Need help? Click the contact button!
+              </p>
+              <Button
+                variant="default"
+                onClick={() => setShowOnboarding(false)}
+                aria-label="Close onboarding"
+              >
+                Get Started
+              </Button>
             </div>
           </Modal>
         )}
@@ -265,3 +364,11 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+// Example usage: wrap your main app or dynamic views
+// <ErrorBoundary>
+//   <ProjectEditor />
+//   <IdeaEditor />
+// </ErrorBoundary>
+
+// If not already done, ensure all major UI trees are wrapped in ErrorBoundary for resilience.

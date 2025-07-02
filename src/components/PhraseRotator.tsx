@@ -3,12 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PhraseRotatorProps {
-  phrases: string[];
+  phrases?: string[];
   interval?: number;
   className?: string;
 }
 
-const PhraseRotator: React.FC<PhraseRotatorProps> = ({ phrases, interval = 3000, className }) => {
+const PhraseRotator: React.FC<PhraseRotatorProps> = ({
+  phrases = [],
+  interval = 3000,
+  className,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -29,7 +33,7 @@ const PhraseRotator: React.FC<PhraseRotatorProps> = ({ phrases, interval = 3000,
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
           className="absolute inset-0 flex items-center justify-center text-lg md:text-xl text-amber font-sans font-semibold"
         >
           {phrases[currentIndex]}
@@ -40,3 +44,18 @@ const PhraseRotator: React.FC<PhraseRotatorProps> = ({ phrases, interval = 3000,
 };
 
 export default PhraseRotator;
+
+export const PhraseRotatorSkeleton: React.FC = () => {
+  const phrases = [
+    'Spark your next big idea!',
+    'Explore the cosmos of creativity.',
+    'Shape your thoughts into reality.',
+  ];
+
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setIndex((i) => (i + 1) % phrases.length), 3000);
+    return () => clearInterval(id);
+  }, []);
+  return <span>{phrases[index]}</span>;
+};

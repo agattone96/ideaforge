@@ -1,10 +1,10 @@
-// utils/zineExporter.ts
+// TODO: manual fix required – zineExporter.ts is empty. Add implementation or remove if unused.
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useMemo } from 'react';
 import * as logger from '@/services/logger';
 
 // Custom hook for sorting/filtering ideas
-import { useMemo } from 'react';
 import { Idea } from '@/types';
 
 interface ZineExportOptions {
@@ -13,12 +13,7 @@ interface ZineExportOptions {
   // Add more options: paper size, orientation, margins, custom styling for PDF
 }
 
-/**
- * Renders the current view (or specific elements) to a canvas and exports as a PDF.
- * This is a basic implementation. Advanced "zine" features would require
- * more sophisticated layout control, styling, and potentially a server-side component
- * for complex PDF generation.
- */
+
 export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Promise<void> => {
   const {
     filename = `IdeaForge_Zine_${new Date().toISOString().split('T')[0]}.pdf`,
@@ -28,13 +23,15 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
   try {
     const pdf = new jsPDF({
       orientation: 'p', // portrait
-      unit: 'pt',       // points
-      format: 'a4',     // A4 paper size
+      unit: 'pt', // points
+      format: 'a4', // A4 paper size
     });
 
     const elementsToCapture: HTMLElement[] = [];
     if (pageSelector) {
-      document.querySelectorAll<HTMLElement>(pageSelector).forEach(el => elementsToCapture.push(el));
+      document
+        .querySelectorAll<HTMLElement>(pageSelector)
+        .forEach((el) => elementsToCapture.push(el));
     } else {
       // Fallback: try to capture the main app content area
       // This needs a reliable selector for your app's main content wrapper
@@ -43,15 +40,15 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
     }
 
     if (elementsToCapture.length === 0) {
-      throw new Error("No content found to export for the Zine.");
+      throw new Error('No content found to export for the Zine.');
     }
 
     for (let i = 0; i < elementsToCapture.length; i++) {
       const element = elementsToCapture[i];
-      
+
       // Ensure element is visible and has dimensions
       // May need to temporarily adjust styles for off-screen or hidden elements if they should be included
-      
+
       const canvas = await html2canvas(element, {
         scale: 2, // Increase scale for better quality
         useCORS: true, // If you have external images
@@ -64,11 +61,11 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      
+
       // Calculate aspect ratio to fit image on page
       const imgWidth = pdfWidth * 0.9; // Use 90% of page width
       const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-      
+
       let finalImgHeight = imgHeight;
       let finalImgWidth = imgWidth;
 
@@ -76,7 +73,7 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
         finalImgHeight = pdfHeight * 0.9;
         finalImgWidth = (imgProps.width * finalImgHeight) / imgProps.height;
       }
-      
+
       const xOffset = (pdfWidth - finalImgWidth) / 2;
       const yOffset = (pdfHeight - finalImgHeight) / 2;
 
@@ -88,11 +85,12 @@ export const exportViewAsPdfZine = async (options: ZineExportOptions = {}): Prom
 
     pdf.save(filename);
     logger.info(`Zine exported as ${filename}`);
-
   } catch (error) {
-    console.error("Error exporting Zine:", error);
+    console.error('Error exporting Zine:', error);
     // Optionally, notify the user via UI
-    throw new Error(`Failed to export Zine: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to export Zine: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 };
 
@@ -118,6 +116,13 @@ export function useSortedIdeas(ideas: Idea[], sortOption: SortOption): Idea[] {
     }
     return sorted;
   }, [ideas, sortOption]);
+}
+
+// TODO: Implement zine export utility
+
+export function exportZine(data: unknown): void {
+  // Placeholder: implement export logic
+  // TODO: Add test for exportZine
 }
 
 // Placeholder for more advanced zine creation, e.g. with custom layouts, text extraction etc.

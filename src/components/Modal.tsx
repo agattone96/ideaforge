@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, Variants, Transition } from 'framer-motion';
-import { XMarkIcon } from './icons'; 
+import { XMarkIcon } from './icons';
 import Button from './Button'; // Use the refactored Button
 
 interface ModalProps {
@@ -32,15 +32,15 @@ const modalVariantsDefault: Variants = {
   exit: { opacity: 0, scale: 0.9, y: -20, transition: exitTransition },
 };
 
-const Modal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title, 
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
   titleId = 'modal-title',
   descriptionId = 'modal-description',
-  children, 
-  footer, 
-  size = 'md', 
+  children,
+  footer,
+  size = 'md',
   isGlassmorphic = false,
   className = '',
   prefersReducedMotion = false,
@@ -48,13 +48,18 @@ const Modal: React.FC<ModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusedElementRef = useRef<HTMLElement | null>(null);
 
-  const modalMotionVariants = prefersReducedMotion ? modalVariantsReducedMotion : modalVariantsDefault;
+  const modalMotionVariants = prefersReducedMotion
+    ? modalVariantsReducedMotion
+    : modalVariantsDefault;
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      onClose();
-    }
-  }, [onClose]);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -76,9 +81,9 @@ const Modal: React.FC<ModalProps> = ({
                 e.preventDefault();
               }
             } else if (document.activeElement === lastElement) {
-                firstElement.focus();
-                e.preventDefault();
-              }
+              firstElement.focus();
+              e.preventDefault();
+            }
           }
         };
         document.addEventListener('keydown', trapFocus);
@@ -91,12 +96,14 @@ const Modal: React.FC<ModalProps> = ({
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      if (previousFocusedElementRef.current && document.body.contains(previousFocusedElementRef.current)) {
+      if (
+        previousFocusedElementRef.current &&
+        document.body.contains(previousFocusedElementRef.current)
+      ) {
         previousFocusedElementRef.current.focus();
       }
     };
   }, [isOpen, handleKeyDown]);
-
 
   const sizeClasses = {
     sm: 'max-w-sm',
@@ -113,6 +120,7 @@ const Modal: React.FC<ModalProps> = ({
     max-h-[90vh] flex flex-col
   `;
 
+  if (!isOpen) return null;
   return (
     <AnimatePresence>
       {isOpen && (
@@ -140,7 +148,10 @@ const Modal: React.FC<ModalProps> = ({
             tabIndex={-1} // Make the panel focusable
           >
             <header className="flex justify-between items-center p-4 sm:p-5 border-b border-theme-border-primary flex-shrink-0">
-              <h3 id={titleId} className="text-xl font-display font-semibold text-theme-accent-primary">
+              <h3
+                id={titleId}
+                className="text-xl font-display font-semibold text-theme-accent-primary"
+              >
                 {title}
               </h3>
               <Button
@@ -152,11 +163,14 @@ const Modal: React.FC<ModalProps> = ({
                 <XMarkIcon className="w-6 h-6" />
               </Button>
             </header>
-            
-            <main id={descriptionId} className="p-4 sm:p-5 text-sm sm:text-base leading-relaxed overflow-y-auto flex-grow custom-scrollbar">
+
+            <main
+              id={descriptionId}
+              className="p-4 sm:p-5 text-sm sm:text-base leading-relaxed overflow-y-auto flex-grow custom-scrollbar"
+            >
               {children}
             </main>
-            
+
             {footer && (
               <footer className="flex justify-end space-x-3 p-4 sm:p-5 border-t border-theme-border-primary flex-shrink-0">
                 {footer}

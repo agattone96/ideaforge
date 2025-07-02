@@ -1,7 +1,8 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './index.html',
-    './src/**/*.{js,ts,jsx,tsx}'
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -20,8 +21,8 @@ module.exports = {
         body: ['Poppins', 'sans-serif'],
       },
       boxShadow: {
-        'glow-lg': '0 0 15px theme(colors.cosmic-pink), 0 0 30px theme(colors.cosmic-pink)',
-        'glow-xl': '0 0 25px theme(colors.cosmic-pink), 0 0 50px theme(colors.cosmic-pink)',
+        'glow-lg': '0 0 15px #f72585, 0 0 30px #f72585',
+        'glow-xl': '0 0 25px #f72585, 0 0 50px #f72585',
       },
       dropShadow: {
         'glow-pink': '0 0 15px #f72585',

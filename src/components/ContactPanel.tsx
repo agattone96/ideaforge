@@ -13,7 +13,8 @@ interface ContactPanelProps {
   addNotification: (message: string, type: 'success' | 'error' | 'info') => void;
 }
 
-const panelVariants: Variants = { // Explicitly typed with Variants
+const panelVariants: Variants = {
+  // Explicitly typed with Variants
   hidden: { y: '100%', opacity: 0.8 },
   visible: { y: '0%', opacity: 1, transition: { type: 'spring', stiffness: 100, damping: 20 } },
   exit: { y: '100%', opacity: 0, transition: { ease: 'anticipate', duration: 0.4 } },
@@ -31,21 +32,24 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotific
     setIsSubmitting(true);
     setSubmitStatus(null);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     // Replace with actual form submission logic (e.g., to Formspree, Netlify Forms, or backend)
     logger.info('Contact form submitted', { name, email, message });
     setIsSubmitting(false);
-    if (Math.random() > 0.1) { // Simulate mostly success
-        setSubmitStatus('success');
-        setName(''); setEmail(''); setMessage('');
-        addNotification('Transmission sent successfully.', 'success');
-        setTimeout(() => {
-            setSubmitStatus(null);
-            onClose();
-        }, 3000);
+    if (Math.random() > 0.1) {
+      // Simulate mostly success
+      setSubmitStatus('success');
+      setName('');
+      setEmail('');
+      setMessage('');
+      addNotification('Transmission sent successfully.', 'success');
+      setTimeout(() => {
+        setSubmitStatus(null);
+        onClose();
+      }, 3000);
     } else {
-        setSubmitStatus('error');
-        addNotification('Transmission failed to send.', 'error');
+      setSubmitStatus('error');
+      addNotification('Transmission failed to send.', 'error');
     }
   };
 
@@ -68,13 +72,22 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotific
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking panel content
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-sans font-bold text-theme-accent-primary">Send a Transmission</h2>
+              <h2 className="text-2xl font-sans font-bold text-theme-accent-primary">
+                Send a Transmission
+              </h2>
               <div className="help-tooltip-wrapper">
-                <Button variant="icon" onClick={onClose} aria-label="Close Contact Panel" className="help-tooltip-icon">
+                <Button
+                  variant="icon"
+                  onClick={onClose}
+                  aria-label="Close Contact Panel"
+                  className="help-tooltip-icon"
+                >
                   <XMarkIcon className="w-6 h-6 text-theme-text-secondary hover:text-theme-accent-primary" />
                 </Button>
-                {/* Tooltip text styled globally and uses theme vars */}
-                <span className="help-tooltip-text !text-xs !min-w-[100px] !max-w-[150px] !text-center">Seal Transmission Channel</span> 
+                {}
+                <span className="help-tooltip-text !text-xs !min-w-[100px] !max-w-[150px] !text-center">
+                  Seal Transmission Channel
+                </span>
               </div>
             </div>
 
@@ -85,7 +98,8 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotific
             )}
             {submitStatus === 'error' && (
               <div className="text-center p-4 bg-status-error/20 text-status-error rounded-md mb-4">
-                Cosmic static disrupted your signal. Please try re-transmitting or use an alternate frequency.
+                Cosmic static disrupted your signal. Please try re-transmitting or use an alternate
+                frequency.
               </div>
             )}
 
@@ -123,7 +137,7 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotific
                   variant="default" // This variant uses theme-accent-primary
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
-                  leftIcon={<PaperAirplaneIcon className="w-5 h-5"/>}
+                  leftIcon={<PaperAirplaneIcon className="w-5 h-5" />}
                 >
                   {isSubmitting ? 'Sending Signal...' : 'Transmit Message'}
                 </Button>
@@ -138,5 +152,15 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ isOpen, onClose, addNotific
     </AnimatePresence>
   );
 };
+
+// Skeleton component for ContactPanel
+export const ContactPanelSkeleton: React.FC = () => (
+  <aside className="p-4">
+    <h2 className="font-bold">Contact</h2>
+    <p>
+      Email: <a href="mailto:support@ideaforge.local">support@ideaforge.local</a>
+    </p>
+  </aside>
+);
 
 export default ContactPanel;

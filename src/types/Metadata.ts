@@ -1,3 +1,4 @@
+// TODO: manual fix required – Metadata.ts is empty. Add type definitions for metadata.
 // types/Metadata.ts
 import { z } from 'zod';
 
@@ -11,3 +12,10 @@ export const AppMetadataSchema = z.object({
 
 // TypeScript interface derived from the Zod schema
 export type AppMetadata = z.infer<typeof AppMetadataSchema>;
+
+export interface Metadata {
+  name: string;
+  description: string;
+  requestFramePermissions?: string[];
+  prompt?: string;
+}

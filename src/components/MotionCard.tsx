@@ -11,10 +11,10 @@ interface MotionCardProps {
   tiltEnabled?: boolean; // New prop to control tilt
 }
 
-const MotionCard: React.FC<MotionCardProps> = ({ 
-  children, 
-  className, 
-  title, 
+const MotionCard: React.FC<MotionCardProps> = ({
+  children,
+  className,
+  title,
   imageUrl,
   tiltEnabled = true, // Default to true
 }) => {
@@ -38,15 +38,26 @@ const MotionCard: React.FC<MotionCardProps> = ({
 
   const effectiveTiltEnabled = tiltEnabled && !prefersReducedMotion;
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], effectiveTiltEnabled ? ['8deg', '-8deg'] : ['0deg', '0deg']);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], effectiveTiltEnabled ? ['-8deg', '8deg'] : ['0deg', '0deg']);
+  const rotateX = useTransform(
+    mouseYSpring,
+    [-0.5, 0.5],
+    effectiveTiltEnabled ? ['8deg', '-8deg'] : ['0deg', '0deg']
+  );
+  const rotateY = useTransform(
+    mouseXSpring,
+    [-0.5, 0.5],
+    effectiveTiltEnabled ? ['-8deg', '8deg'] : ['0deg', '0deg']
+  );
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!effectiveTiltEnabled || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  }, [effectiveTiltEnabled]);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!effectiveTiltEnabled || !cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      x.set((e.clientX - rect.left) / rect.width - 0.5);
+      y.set((e.clientY - rect.top) / rect.height - 0.5);
+    },
+    [effectiveTiltEnabled]
+  );
 
   const handleMouseLeave = useCallback(() => {
     if (!effectiveTiltEnabled) return;
@@ -56,17 +67,19 @@ const MotionCard: React.FC<MotionCardProps> = ({
 
   const cardVariants: Variants = {
     initial: { opacity: 0, y: 20, filter: 'blur(3px)' },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 0.5, delay: Math.random() * 0.2, ease: [0.25, 1, 0.5, 1] }
+      transition: { duration: 0.5, delay: Math.random() * 0.2, ease: [0.25, 1, 0.5, 1] },
     },
-    hover: effectiveTiltEnabled ? { 
-        scale: 1.03, 
-        boxShadow: 'var(--shadow-card-hover)', // Use theme token
-        transition: { type: 'spring', stiffness: 250, damping: 15 }
-    } : { scale: 1.01, boxShadow: 'var(--shadow-card-hover)' }, // Subtle hover if no tilt
+    hover: effectiveTiltEnabled
+      ? {
+          scale: 1.03,
+          boxShadow: 'var(--shadow-card-hover)', // Use theme token
+          transition: { type: 'spring', stiffness: 250, damping: 15 },
+        }
+      : { scale: 1.01, boxShadow: 'var(--shadow-card-hover)' }, // Subtle hover if no tilt
   };
 
   return (
@@ -78,7 +91,7 @@ const MotionCard: React.FC<MotionCardProps> = ({
         rotateX,
         rotateY,
         transformStyle: 'preserve-3d',
-        perspective: '1200px', 
+        perspective: '1200px',
       }}
       className={`
         relative bg-theme-bg-accent p-space-sm rounded-card shadow-card 
@@ -90,22 +103,47 @@ const MotionCard: React.FC<MotionCardProps> = ({
       animate="animate"
       whileHover="hover"
     >
-      <div 
-        style={{ transform: effectiveTiltEnabled ? 'translateZ(25px)' : 'none' }} 
+      <div
+        style={{ transform: effectiveTiltEnabled ? 'translateZ(25px)' : 'none' }}
         className="transform-gpu" // Hint for GPU acceleration
       >
         {imageUrl && (
-          <img 
-            src={imageUrl} 
-            alt={title || 'Motion Card Image'} 
-            className="w-full h-40 object-cover rounded-md mb-space-xs border border-theme-border-primary/20" 
+          <img
+            src={imageUrl}
+            alt={title || 'Motion Card Image'}
+            className="w-full h-40 object-cover rounded-md mb-space-xs border border-theme-border-primary/20"
           />
         )}
-        {title && <h3 className="text-theme-accent-primary font-display font-semibold text-lg mb-space-xs">{title}</h3>}
-        {children || <p className="text-theme-text-secondary text-sm">Motion card content placeholder.</p>}
+        {title && (
+          <h3 className="text-theme-accent-primary font-display font-semibold text-lg mb-space-xs">
+            {title}
+          </h3>
+        )}
+        {children || (
+          <p className="text-theme-text-secondary text-sm">Motion card content placeholder.</p>
+        )}
       </div>
     </motion.div>
   );
 };
+
+// Skeleton component
+export const MotionCardSkeleton: React.FC = () => (
+  <motion.div
+    initial="hidden"
+    animate="visible"
+    variants={{
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    }}
+    className="bg-white rounded shadow p-4"
+  >
+    <div className="animate-pulse flex flex-col space-y-4">
+      <div className="h-40 bg-gray-200 rounded-md" />
+      <div className="h-6 bg-gray-200 rounded" />
+      <div className="h-4 bg-gray-200 rounded" />
+    </div>
+  </motion.div>
+);
 
 export default MotionCard;

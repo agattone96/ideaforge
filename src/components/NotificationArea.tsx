@@ -1,7 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotificationType } from '@/types';
-import { CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from './icons'; // Assuming these icons are themed
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  XMarkIcon,
+} from './icons'; // Assuming these icons are themed
 
 interface NotificationAreaProps {
   notifications: NotificationType[];
@@ -14,11 +19,29 @@ const notificationVariants = {
   exit: { opacity: 0, scale: 0.5, transition: { duration: 0.2 } },
 };
 
-const Notification: React.FC<{ notification: NotificationType; onDismiss: (id: string) => void }> = ({ notification, onDismiss }) => {
+const Notification: React.FC<{
+  notification: NotificationType;
+  onDismiss: (id: string) => void;
+}> = ({ notification, onDismiss }) => {
   const typeStyles = {
-    success: { bg: 'bg-success/20', border: 'border-success', text: 'text-success', icon: <CheckCircleIcon className="w-5 h-5 mr-2" /> },
-    error: { bg: 'bg-error/20', border: 'border-error', text: 'text-error', icon: <ExclamationTriangleIcon className="w-5 h-5 mr-2" /> },
-    info: { bg: 'bg-amber/20', border: 'border-amber', text: 'text-amber', icon: <InformationCircleIcon className="w-5 h-5 mr-2" /> },
+    success: {
+      bg: 'bg-success/20',
+      border: 'border-success',
+      text: 'text-success',
+      icon: <CheckCircleIcon className="w-5 h-5 mr-2" />,
+    },
+    error: {
+      bg: 'bg-error/20',
+      border: 'border-error',
+      text: 'text-error',
+      icon: <ExclamationTriangleIcon className="w-5 h-5 mr-2" />,
+    },
+    info: {
+      bg: 'bg-amber/20',
+      border: 'border-amber',
+      text: 'text-amber',
+      icon: <InformationCircleIcon className="w-5 h-5 mr-2" />,
+    },
   };
 
   const currentStyle = typeStyles[notification.type];
@@ -54,13 +77,28 @@ const Notification: React.FC<{ notification: NotificationType; onDismiss: (id: s
 };
 
 const NotificationArea: React.FC<NotificationAreaProps> = ({ notifications, onDismiss }) => (
-  <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end space-y-2" aria-live="polite" role="status">
+  <div
+    className="fixed bottom-6 right-6 z-[100] flex flex-col items-end space-y-2"
+    aria-live="polite"
+    role="status"
+  >
     <AnimatePresence initial={false}>
-      {notifications.map(notif => (
+      {notifications.map((notif) => (
         <Notification key={notif.id} notification={notif} onDismiss={onDismiss} />
       ))}
     </AnimatePresence>
   </div>
 );
+
+interface NotificationAreaSkeletonProps {
+  message?: string;
+}
+
+export const NotificationAreaSkeleton: React.FC<NotificationAreaSkeletonProps> = ({ message }) =>
+  message ? (
+    <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow">
+      {message}
+    </div>
+  ) : null;
 
 export default NotificationArea;

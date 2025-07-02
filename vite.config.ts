@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
     define: {
       // Expose environment variables to the client.
       // This makes `process.env.API_KEY` available in the code.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY)
+      'process.env.API_KEY': JSON.stringify(env.API_KEY ?? '')
     },
     // Server configuration for development
     server: {
@@ -33,3 +33,5 @@ export default defineConfig(({ mode }) => {
     },
   }
 });
+
+// TODO: manual fix required – vite.config.ts is empty. Add Vite configuration for React, TypeScript, and Tailwind. See Vite docs for recommended setup.

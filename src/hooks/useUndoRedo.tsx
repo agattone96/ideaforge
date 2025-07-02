@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 
 interface HistoryState<T> {
   past: T[];
@@ -15,55 +15,32 @@ interface UndoRedoContextType<T> {
   canRedo: boolean;
 }
 
-function useUndoRedo<T>(initialPresent: T): UndoRedoContextType<T> {
-  const [history, setHistory] = useState<HistoryState<T>>({
-    past: [],
-    present: initialPresent,
-    future: [],
-  });
+export function useUndoRedo<T>(initial: T) {
+  const [state, setState] = useState(initial);
+  const undoStack = useRef<T[]>([]);
+  const redoStack = useRef<T[]>([]);
 
-  const set = (newPresent: T) => {
-    setHistory(({ past, present }) => ({
-      past: [...past, present],
-      present: newPresent,
-      future: [],
-    }));
+  const set = (value: T) => {
+    undoStack.current.push(state);
+    setState(value);
+    redoStack.current = [];
   };
 
   const undo = () => {
-    setHistory(({ past, present, future }) => {
-      if (past.length === 0) return { past, present, future };
-      const previous = past[past.length - 1];
-      const newPast = past.slice(0, past.length - 1);
-      return {
-        past: newPast,
-        present: previous,
-        future: [present, ...future],
-      };
-    });
+    if (undoStack.current.length) {
+      redoStack.current.push(state);
+      setState(undoStack.current.pop()!);
+    }
   };
 
   const redo = () => {
-    setHistory(({ past, present, future }) => {
-      if (future.length === 0) return { past, present, future };
-      const next = future[0];
-      const newFuture = future.slice(1);
-      return {
-        past: [...past, present],
-        present: next,
-        future: newFuture,
-      };
-    });
+    if (redoStack.current.length) {
+      undoStack.current.push(state);
+      setState(redoStack.current.pop()!);
+    }
   };
 
-  return {
-    state: history,
-    set,
-    undo,
-    redo,
-    canUndo: history.past.length > 0,
-    canRedo: history.future.length > 0,
-  };
+  return { state, set, undo, redo };
 }
 
 // Context for the whole app (projects and ideas)
@@ -73,16 +50,16 @@ interface AppState {
 
 const UndoRedoContext = createContext<UndoRedoContextType<AppState> | undefined>(undefined);
 
-export const UndoRedoProvider = ({
+export function UndoRedoProvider({
   children,
   initialState,
 }: {
   children: import('react').ReactNode;
   initialState: AppState;
-}) => {
+}) {
   const value = useUndoRedo<AppState>(initialState);
   return <UndoRedoContext.Provider value={value}>{children}</UndoRedoContext.Provider>;
-};
+}
 
 export function useUndoRedoContext() {
   const ctx = useContext(UndoRedoContext);

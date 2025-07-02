@@ -1,18 +1,23 @@
-// motion/variants.ts
+// TODO: manual fix required – variants.ts is empty. Add Framer Motion variants or remove if unused.
 import { Variants } from 'framer-motion';
 
 export const fadeIn: Variants = {
   hidden: { opacity: 0, y: 10 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.5, ease: 'easeOut' },
   },
   exit: {
     opacity: 0,
     y: -10,
-    transition: { duration: 0.3, ease: "easeIn" }
-  }
+    transition: { duration: 0.3, ease: 'easeIn' },
+  },
+};
+
+export const fadeInSimple = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.3 } },
 };
 
 export const staggerContainer: Variants = {
@@ -28,29 +33,29 @@ export const staggerContainer: Variants = {
 
 export const staggerItem: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 12 }
+    transition: { type: 'spring', stiffness: 100, damping: 12 },
   },
 };
 
 export const slideInFromLeft: Variants = {
   hidden: { x: '-100vw', opacity: 0 },
-  visible: { 
-    x: 0, 
-    opacity: 1, 
-    transition: { type: 'spring', stiffness: 50, damping: 20 } 
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { type: 'spring', stiffness: 50, damping: 20 },
   },
   exit: { x: '-100vw', opacity: 0, transition: { ease: 'easeInOut', duration: 0.3 } },
 };
 
 export const slideInFromRight: Variants = {
   hidden: { x: '100vw', opacity: 0 },
-  visible: { 
-    x: 0, 
-    opacity: 1, 
-    transition: { type: 'spring', stiffness: 50, damping: 20 } 
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { type: 'spring', stiffness: 50, damping: 20 },
   },
   exit: { x: '100vw', opacity: 0, transition: { ease: 'easeInOut', duration: 0.3 } },
 };
@@ -64,7 +69,7 @@ export const slideDown: Variants = {
       type: 'spring',
       stiffness: 40,
       damping: 15,
-      duration: 0.7
+      duration: 0.7,
     },
   },
   exit: {

@@ -26,8 +26,12 @@ describe('Button Component', () => {
   });
 
   test('renders left and right icons', () => {
-    const LeftIcon = () => <svg data-testid="left-icon" />;
-    const RightIcon = () => <svg data-testid="right-icon" />;
+    function LeftIcon() {
+      return <svg data-testid="left-icon" />;
+    }
+    function RightIcon() {
+      return <svg data-testid="right-icon" />;
+    }
     render(
       <Button leftIcon={<LeftIcon />} rightIcon={<RightIcon />}>
         Button with Icons
@@ -61,8 +65,19 @@ describe('Button Component', () => {
 
   test('does not call onClick handler when disabled and clicked', () => {
     const handleClick = jest.fn();
-    render(<Button onClick={handleClick} disabled>Disabled</Button>);
+    render(
+      <Button onClick={handleClick} disabled>
+        Disabled
+      </Button>
+    );
     fireEvent.click(screen.getByText(/disabled/i));
     expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  test('calls onClick', () => {
+    const onClick = jest.fn();
+    const { getByText } = render(<Button onClick={onClick}>Click</Button>);
+    fireEvent.click(getByText('Click'));
+    expect(onClick).toHaveBeenCalled();
   });
 });

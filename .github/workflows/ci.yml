@@ -1,14 +1,17 @@
 # Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: CI
 
+# Trigger CI on push and pull request events
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+
 permissions:
   contents: read
   actions: read
@@ -24,6 +27,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -39,6 +45,9 @@ jobs:
 
       - name: Run tests with coverage
         run: npm test -- --coverage
+
+      - name: Build application
+        run: npm run build
 
       - name: Upload coverage artifact
         if: success()

@@ -2,16 +2,23 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
 import { Project, Idea } from '@/types';
-import Button from './Button'; 
-import { StarIcon, EyeIcon, DocumentTextIcon, PlusCircleIcon, TrashIcon, EyeSlashIcon } from './icons'; 
+import Button from './Button';
+import {
+  StarIcon,
+  EyeIcon,
+  DocumentTextIcon,
+  PlusCircleIcon,
+  TrashIcon,
+  EyeSlashIcon,
+} from './icons';
 
 interface BlueprintCardProps {
   item: Project | Idea;
   type: 'project' | 'idea';
   onSelect?: (item: Project | Idea) => void;
-  onQuickNewIdea?: (project: Project) => void; 
+  onQuickNewIdea?: (project: Project) => void;
   onDelete?: (item: Project | Idea) => void;
-  onToggleFavorite?: (projectId: string) => void; 
+  onToggleFavorite?: (projectId: string) => void;
   className?: string;
 }
 
@@ -43,15 +50,26 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
   const mouseXSpring = useSpring(x, springConfig);
   const mouseYSpring = useSpring(y, springConfig);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], prefersReducedMotion ? ['0deg', '0deg'] : ['7deg', '-7deg']); 
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], prefersReducedMotion ? ['0deg', '0deg'] : ['-7deg', '7deg']); 
+  const rotateX = useTransform(
+    mouseYSpring,
+    [-0.5, 0.5],
+    prefersReducedMotion ? ['0deg', '0deg'] : ['7deg', '-7deg']
+  );
+  const rotateY = useTransform(
+    mouseXSpring,
+    [-0.5, 0.5],
+    prefersReducedMotion ? ['0deg', '0deg'] : ['-7deg', '7deg']
+  );
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  }, [prefersReducedMotion]);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (prefersReducedMotion || !cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      x.set((e.clientX - rect.left) / rect.width - 0.5);
+      y.set((e.clientY - rect.top) / rect.height - 0.5);
+    },
+    [prefersReducedMotion]
+  );
 
   const handleMouseLeave = useCallback(() => {
     if (prefersReducedMotion) return;
@@ -60,11 +78,11 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
   }, [prefersReducedMotion]);
 
   const handleFlip = (e?: React.MouseEvent) => {
-    e?.stopPropagation(); 
-    if (type === 'idea') { 
+    e?.stopPropagation();
+    if (type === 'idea') {
       setIsFlipped(!isFlipped);
     } else if (onSelect) {
-      onSelect(item); 
+      onSelect(item);
     }
   };
 
@@ -72,45 +90,67 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
   const idea = type === 'idea' ? (item as Idea) : null;
 
   const cardMotionVariants: Variants = {
-    initial: { scale: 1, boxShadow: 'var(--shadow-card)'}, // Use CSS var
-    hover: prefersReducedMotion ? {} : { 
-      scale: 1.03, 
-      boxShadow: 'var(--shadow-card-hover)', // Use CSS var
-      transition: { type: 'spring', stiffness: 200, damping: 15 }
-    },
+    initial: { scale: 1, boxShadow: 'var(--shadow-card)' }, // Use CSS var
+    hover: prefersReducedMotion
+      ? {}
+      : {
+          scale: 1.03,
+          boxShadow: 'var(--shadow-card-hover)', // Use CSS var
+          transition: { type: 'spring', stiffness: 200, damping: 15 },
+        },
     glitchInitial: { opacity: 0, filter: 'blur(2px) contrast(0.9)' },
-    glitchAnimate: { 
-      opacity: 1, 
+    glitchAnimate: {
+      opacity: 1,
       filter: 'blur(0px) contrast(1)',
-      transition: { duration: 0.3, delay: Math.random() * 0.15 + 0.05 } 
+      transition: { duration: 0.3, delay: Math.random() * 0.15 + 0.05 },
     },
   };
-  
+
   const flipContainerVariants: Variants = {
     initial: { rotateY: 0 },
     flipped: { rotateY: 180 },
   };
 
-  const titleText = type === 'project' && project ? project.name : type === 'idea' && idea ? idea.title : '';
-  const cardBG = project?.isFavorite ? 'bg-theme-bg-accent shadow-glow-accent-md' : 'bg-theme-bg-secondary';
+  const titleText =
+    type === 'project' && project ? project.name : type === 'idea' && idea ? idea.title : '';
+  const cardBG = project?.isFavorite
+    ? 'bg-theme-bg-accent shadow-glow-accent-md'
+    : 'bg-theme-bg-secondary';
 
   const renderFront = () => (
     <motion.div
       className={`absolute inset-0 w-full h-full p-space-sm sm:p-space-xs_md rounded-card flex flex-col justify-between backface-hidden border border-theme-border-primary/70 ${cardBG} transition-colors duration-300`}
-      style={{ WebkitBackfaceVisibility: 'hidden', MozBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
+      style={{
+        WebkitBackfaceVisibility: 'hidden',
+        MozBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+      }}
     >
       <div>
         <div className="flex justify-between items-start mb-space-xs">
-          <div className="flex items-center min-w-0"> 
-            {(project?.logo || idea?.logo) ? (
-              <img src={project?.logo || idea?.logo} alt={`${titleText} logo`} className="w-8 h-8 object-cover rounded-sm mr-space-xs flex-shrink-0 border border-theme-accent-primary/30" />
+          <div className="flex items-center min-w-0">
+            {project?.logo || idea?.logo ? (
+              <img
+                src={project?.logo || idea?.logo}
+                alt={`${titleText} logo`}
+                className="w-8 h-8 object-cover rounded-sm mr-space-xs flex-shrink-0 border border-theme-accent-primary/30"
+              />
             ) : (
               <DocumentTextIcon className="w-8 h-8 text-theme-accent-primary/60 mr-space-xs flex-shrink-0" />
             )}
-            <h3 
+            <h3
               className="text-lg sm:text-xl font-display font-semibold text-theme-accent-primary truncate cursor-pointer hover:text-opacity-80 transition-opacity"
-              onClick={(e) => { e.stopPropagation(); if(onSelect) onSelect(item); }}
-              title={type === 'project' && project ? `Open Constellation: ${project.name}` : type === 'idea' && idea ? `Edit Blueprint: ${idea.title}` : ''}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onSelect) onSelect(item);
+              }}
+              title={
+                type === 'project' && project
+                  ? `Open Constellation: ${project.name}`
+                  : type === 'idea' && idea
+                    ? `Edit Blueprint: ${idea.title}`
+                    : ''
+              }
             >
               {titleText}
             </h3>
@@ -119,9 +159,12 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
             <Button
               variant="icon"
               size="sm"
-              onClick={(e) => { e.stopPropagation(); onToggleFavorite(project.id); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(project.id);
+              }}
               className={`!p-1 ml-space-xs ${project.isFavorite ? 'text-theme-accent-primary shadow-glow-accent-sm' : 'text-theme-text-secondary hover:text-theme-accent-primary'}`}
-              aria-label={project.isFavorite ? "Unmark as favorite" : "Mark as favorite"}
+              aria-label={project.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}
               prefersReducedMotion={prefersReducedMotion}
             >
               <StarIcon className="w-5 h-5" isFilled={project.isFavorite} />
@@ -129,8 +172,11 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
           )}
         </div>
         {idea && (
-          <p className="text-xs sm:text-sm text-theme-text-secondary mb-1 line-clamp-2" title={idea.problemSolved}>
-            Challenge: {idea.problemSolved || "Not specified"}
+          <p
+            className="text-xs sm:text-sm text-theme-text-secondary mb-1 line-clamp-2"
+            title={idea.problemSolved}
+          >
+            Challenge: {idea.problemSolved || 'Not specified'}
           </p>
         )}
         {project && (
@@ -141,27 +187,64 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
       </div>
       <div className="mt-auto pt-space-xs">
         <p className="text-xs text-theme-text-secondary/70">
-          {type === 'project' ? 'Ignited' : 'Forged'}: {new Date(type === 'project' ? item.createdAt : (item as Idea).updatedAt).toLocaleDateString()}
+          {type === 'project' ? 'Ignited' : 'Forged'}:{' '}
+          {new Date(
+            type === 'project' ? item.createdAt : (item as Idea).updatedAt
+          ).toLocaleDateString()}
         </p>
         <div className="flex items-center justify-end space-x-space-xs mt-space-xs">
           {type === 'idea' && (
-            <Button variant="icon" size="sm" onClick={handleFlip} title={isFlipped ? "Close Preview" : "Preview Blueprint"} prefersReducedMotion={prefersReducedMotion}>
-              {isFlipped ? <EyeSlashIcon className="w-5 h-5"/> : <EyeIcon className="w-5 h-5"/>}
+            <Button
+              variant="icon"
+              size="sm"
+              onClick={handleFlip}
+              title={isFlipped ? 'Close Preview' : 'Preview Blueprint'}
+              prefersReducedMotion={prefersReducedMotion}
+            >
+              {isFlipped ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
             </Button>
           )}
           {project && onQuickNewIdea && (
-             <Button variant="icon" size="sm" onClick={(e) => {e.stopPropagation(); onQuickNewIdea(project);}} title="New Blueprint in Constellation" prefersReducedMotion={prefersReducedMotion}>
-              <PlusCircleIcon className="w-5 h-5"/>
+            <Button
+              variant="icon"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onQuickNewIdea(project);
+              }}
+              title="New Blueprint in Constellation"
+              prefersReducedMotion={prefersReducedMotion}
+            >
+              <PlusCircleIcon className="w-5 h-5" />
             </Button>
           )}
           {onSelect && (
-            <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onSelect(item); }} title={type === 'project' ? 'Open Constellation' : 'Edit Blueprint'} prefersReducedMotion={prefersReducedMotion}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(item);
+              }}
+              title={type === 'project' ? 'Open Constellation' : 'Edit Blueprint'}
+              prefersReducedMotion={prefersReducedMotion}
+            >
               {type === 'project' ? 'Open' : 'Edit'}
             </Button>
           )}
           {onDelete && (
-             <Button variant="icon" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(item); }} title={`Disassemble ${type}`} className="text-status-error hover:bg-status-error/10" prefersReducedMotion={prefersReducedMotion}>
-              <TrashIcon className="w-5 h-5"/>
+            <Button
+              variant="icon"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(item);
+              }}
+              title={`Disassemble ${type}`}
+              className="text-status-error hover:bg-status-error/10"
+              prefersReducedMotion={prefersReducedMotion}
+            >
+              <TrashIcon className="w-5 h-5" />
             </Button>
           )}
         </div>
@@ -169,34 +252,60 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
     </motion.div>
   );
 
-  const renderBack = () => (
+  const renderBack = () =>
     idea && (
-    <motion.div
-      className="absolute inset-0 w-full h-full bg-theme-bg-accent p-space-sm sm:p-space-xs_md rounded-card flex flex-col justify-between backface-hidden border border-theme-border-primary shadow-card overflow-y-auto custom-scrollbar"
-      style={{ transform: 'rotateY(180deg)', WebkitBackfaceVisibility: 'hidden', MozBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
-    >
-      <div className="space-y-space-xs text-theme-text-primary font-body"> 
-        <div className="flex items-center border-b border-theme-accent-primary/30 pb-space-xxs mb-space-xs">
-          {idea.logo && <img src={idea.logo} alt="Blueprint logo" className="w-10 h-10 object-cover rounded-sm mr-space-xs border border-theme-accent-primary/20"/>}
-          <h4 className="text-md font-display font-semibold text-theme-accent-primary">Preview: {idea.title}</h4>
+      <motion.div
+        className="absolute inset-0 w-full h-full bg-theme-bg-accent p-space-sm sm:p-space-xs_md rounded-card flex flex-col justify-between backface-hidden border border-theme-border-primary shadow-card overflow-y-auto custom-scrollbar"
+        style={{
+          transform: 'rotateY(180deg)',
+          WebkitBackfaceVisibility: 'hidden',
+          MozBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+        }}
+      >
+        <div className="space-y-space-xs text-theme-text-primary font-body">
+          <div className="flex items-center border-b border-theme-accent-primary/30 pb-space-xxs mb-space-xs">
+            {idea.logo && (
+              <img
+                src={idea.logo}
+                alt="Blueprint logo"
+                className="w-10 h-10 object-cover rounded-sm mr-space-xs border border-theme-accent-primary/20"
+              />
+            )}
+            <h4 className="text-md font-display font-semibold text-theme-accent-primary">
+              Preview: {idea.title}
+            </h4>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-theme-text-secondary">Problem:</h5>
+            <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">
+              {idea.problemSolved || 'N/A'}
+            </p>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-theme-text-secondary">Solution:</h5>
+            <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">
+              {idea.coreSolution || 'N/A'}
+            </p>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-theme-text-secondary">Key Features:</h5>
+            <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">
+              {idea.keyFeatures || 'N/A'}
+            </p>
+          </div>
         </div>
-        <div>
-          <h5 className="text-xs font-semibold text-theme-text-secondary">Problem:</h5>
-          <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">{idea.problemSolved || "N/A"}</p>
-        </div>
-        <div>
-          <h5 className="text-xs font-semibold text-theme-text-secondary">Solution:</h5>
-          <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">{idea.coreSolution || "N/A"}</p>
-        </div>
-        <div>
-          <h5 className="text-xs font-semibold text-theme-text-secondary">Key Features:</h5>
-          <p className="text-xs whitespace-pre-wrap line-clamp-3 custom-scrollbar">{idea.keyFeatures || "N/A"}</p>
-        </div>
-      </div>
-      <Button variant="outline" size="sm" onClick={handleFlip} className="mt-auto self-end" prefersReducedMotion={prefersReducedMotion}>Close Preview</Button>
-    </motion.div>
-    )
-  );
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleFlip}
+          className="mt-auto self-end"
+          prefersReducedMotion={prefersReducedMotion}
+        >
+          Close Preview
+        </Button>
+      </motion.div>
+    );
 
   return (
     <motion.div
@@ -204,25 +313,36 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX: prefersReducedMotion ? 0 : rotateX, 
-        rotateY: prefersReducedMotion ? 0 : rotateY, 
-        transformStyle: 'preserve-3d', 
-        perspective: '1000px', 
+        rotateX: prefersReducedMotion ? 0 : rotateX,
+        rotateY: prefersReducedMotion ? 0 : rotateY,
+        transformStyle: 'preserve-3d',
+        perspective: '1000px',
       }}
       className={`relative w-full aspect-[3/2] sm:aspect-[4/2.5] min-h-[190px] sm:min-h-[210px] cursor-default ${className || ''}`}
-      variants={cardMotionVariants} 
-      initial="glitchInitial" 
-      animate="glitchAnimate" 
-      whileHover={prefersReducedMotion ? undefined : "hover"} 
-      onClick={type === 'project' && !prefersReducedMotion ? (e) => { e.stopPropagation(); if (onSelect) onSelect(item); } : undefined} 
-      layout 
+      variants={cardMotionVariants}
+      initial="glitchInitial"
+      animate="glitchAnimate"
+      whileHover={prefersReducedMotion ? undefined : 'hover'}
+      onClick={
+        type === 'project' && !prefersReducedMotion
+          ? (e) => {
+              e.stopPropagation();
+              if (onSelect) onSelect(item);
+            }
+          : undefined
+      }
+      layout
     >
       <motion.div
         className="relative w-full h-full"
         style={{ transformStyle: 'preserve-3d' }}
         variants={flipContainerVariants}
         animate={isFlipped ? 'flipped' : 'initial'}
-        transition={prefersReducedMotion ? { duration: 0.01 } : { type: 'spring', stiffness: 120, damping: 18 }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0.01 }
+            : { type: 'spring', stiffness: 120, damping: 18 }
+        }
       >
         {renderFront()}
         {type === 'idea' && renderBack()}
@@ -232,3 +352,20 @@ const BlueprintCard: React.FC<BlueprintCardProps> = ({
 };
 
 export default BlueprintCard;
+
+export const BlueprintCardSkeleton: React.FC = () => (
+  <div className="bg-blue-50 border border-blue-200 rounded p-4 shadow animate-pulse">
+    <div className="flex items-center mb-4">
+      <div className="w-16 h-16 bg-blue-100 rounded-full mr-4" />
+      <div className="flex-1">
+        <div className="h-4 bg-blue-100 rounded mb-2" />
+        <div className="h-3 bg-blue-100 rounded w-3/4" />
+      </div>
+    </div>
+    <div className="space-y-2">
+      <div className="h-3 bg-blue-100 rounded w-5/6" />
+      <div className="h-3 bg-blue-100 rounded w-4/6" />
+      <div className="h-3 bg-blue-100 rounded w-2/6" />
+    </div>
+  </div>
+);

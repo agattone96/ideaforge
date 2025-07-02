@@ -1,4 +1,4 @@
-// motion/transitions.ts
+// TODO: manual fix required – transitions.ts is empty. Add Framer Motion transitions or remove if unused.
 import { Transition } from 'framer-motion';
 
 export const springDefault: Transition = {
@@ -23,4 +23,10 @@ export const tweenMedium: Transition = {
   type: 'tween',
   duration: 0.4,
   ease: 'circOut',
+};
+
+export const defaultTransition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 30,
 };
