@@ -1,0 +1,17 @@
+# .dockerignore for IdeaForge Local – Ascension Edition
+
+# Node modules directory
+node_modules
+
+# Production build output
+dist
+
+# Environment variables file
+.env
+
+# Git metadata
+.git
+
+# Test files
+**/*.test.*
+**/*.spec.*

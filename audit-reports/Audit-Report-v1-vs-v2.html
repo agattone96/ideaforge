@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Report v1 vs v2 Comparison</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; color: #222; }
+    h1 { color: #2c3e50; text-align: center; margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+    th, td { border: 1px solid #ccc; vertical-align: top; padding: 1rem; }
+    th { background: #f0f0f0; color: #2c3e50; text-align: left; }
+    h3 { margin-top: 0; color: #2c3e50; }
+    .severity-critical { color: #e74c3c; }
+    .severity-high { color: #e67e22; }
+    .severity-medium { color: #f1c40f; }
+    .severity-low { color: #2ecc71; }
+    pre { background: #eee; padding: 1rem; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Audit Report v1 vs v2 Comparison</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Original Production Readiness Audit (VS1)<br><small>2025-07-02</small></th>
+        <th>Performance & Accessibility Audit (VS2)<br><small>2025-07-02</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <h3>Overview</h3>
+          <p>This initial audit evaluates production readiness and design structure of IdeaForge, covering build processes, testing coverage, security, and folder organization.</p>
+        </td>
+        <td>
+          <h3>Overview</h3>
+          <p>This second audit iteration focuses on performance and accessibility enhancements.</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Scope &amp; Objectives</h3>
+          <ul>
+            <li>Validate build and deployment configurations.</li>
+            <li>Assess testing strategies and coverage.</li>
+            <li>Identify security gaps and input validation needs.</li>
+            <li>Review project architecture and folder structure.</li>
+          </ul>
+        </td>
+        <td>
+          <h3>Scope &amp; Objectives</h3>
+          <ul>
+            <li>Review application performance metrics.</li>
+            <li>Audit accessibility compliance (WCAG 2.1).</li>
+            <li>Validate UI component consistency.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Issues Found</h3>
+          <p class="severity-critical">🔴 Critical:</p>
+          <ul>
+            <li>Missing automated end-to-end and accessibility tests.</li>
+          </ul>
+          <p class="severity-high">🟠 High:</p>
+          <ul>
+            <li>No Docker support for consistent production deployment.</li>
+          </ul>
+          <p class="severity-medium">🟡 Medium:</p>
+          <ul>
+            <li>Partial input validation implemented; requires comprehensive schema enforcement.</li>
+          </ul>
+          <p class="severity-low">🟢 Low:</p>
+          <ul>
+            <li>Inconsistent folder naming between <code>motion/</code> and <code>rendering/</code> directories.</li>
+          </ul>
+        </td>
+        <td>
+          <h3>Issues Found</h3>
+          <p class="severity-critical">🔴 Critical:</p>
+          <ul>
+            <li>Memory leak in <code>IdeaList</code> component causing increased heap usage.</li>
+          </ul>
+          <p class="severity-medium">🟡 Medium:</p>
+          <ul>
+            <li>Missing alt attributes on decorative images in <code>IdeaEditor</code>.</li>
+          </ul>
+          <p class="severity-low">🟢 Low:</p>
+          <ul>
+            <li>Inconsistent button spacing in mobile view.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Suggestions &amp; Fixes</h3>
+          <ul>
+            <li>Implement end-to-end tests using Playwright or Cypress.</li>
+            <li>Create Dockerfile and <code>.dockerignore</code> for containerized deployment.</li>
+            <li>Enforce full input validation with <code>zod</code> schemas for all API endpoints.</li>
+            <li>Standardize folder structure; merge related directories under <code>src/</code>.</li>
+          </ul>
+        </td>
+        <td>
+          <h3>Suggestions &amp; Fixes</h3>
+          <ul>
+            <li>Implement cleanup in <code>useEffect</code> to fix memory leak.</li>
+            <li>Add <code>alt=""</code> attributes to decorative images.</li>
+            <li>Adjust CSS margins for <code>&lt;button&gt;</code> elements in responsive media query.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Code or UI Samples</h3>
+          <pre><code>// Example zod schema for input validation
+import { z } from 'zod';
+
+const IdeaSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+});
+
+export type Idea = z.infer<typeof IdeaSchema>;
+</code></pre>
+        </td>
+        <td>
+          <h3>Code or UI Samples</h3>
+          <pre><code>// Example cleanup in IdeaList useEffect
+useEffect(() => {
+  const subscription = dataService.subscribe();
+  return () => subscription.unsubscribe();
+}, []);
+</code></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Status</h3>
+          <p>Critical issues need immediate attention. High and medium items are scheduled for the next release cycle.</p>
+        </td>
+        <td>
+          <h3>Status</h3>
+          <p>All critical issues need immediate attention; other items scheduled for next sprint.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -3,11 +3,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>IdeaForge: Your Cosmic Forge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IdeaForge: Your Cosmic Forge</title>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Sora:wght@400;700&family=Unbounded:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script>
+    function withOpacity(variableName) {
+      return ({ opacityValue }) => {
+        if (opacityValue !== undefined) {
+          return `rgba(var(${variableName}), ${opacityValue})`;
+        }
+        return `rgb(var(${variableName}))`;
+      };
+    }
+
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Theme-aware colors using CSS variables
+            'theme-bg-primary': withOpacity('--color-bg-primary'),
+            'theme-bg-secondary': withOpacity('--color-bg-secondary'),
+            'theme-bg-accent': withOpacity('--color-bg-accent'),
+            'theme-text-primary': withOpacity('--color-text-primary'),
+            'theme-text-secondary': withOpacity('--color-text-secondary'),
+            'theme-text-accent': withOpacity('--color-text-accent'),
+            'theme-border-primary': withOpacity('--color-border-primary'),
+            'theme-border-accent': withOpacity('--color-border-accent'),
+            'theme-accent-primary': withOpacity('--color-accent-primary'),
+            'theme-accent-secondary': withOpacity('--color-accent-secondary'),
+            
+            // Status colors
+            'status-error': withOpacity('--color-status-error'),
+            'status-success': withOpacity('--color-status-success'),
+            'status-warning': withOpacity('--color-status-warning'),
+          },
+          boxShadow: {
+            'glow-accent-sm': 'var(--shadow-glow-accent-sm)',
+            'glow-accent-md': 'var(--shadow-glow-accent-md)',
+            'glow-accent-lg': 'var(--shadow-glow-accent-lg)',
+            'card': 'var(--shadow-card)',
+            'card-hover': 'var(--shadow-card-hover)',
+          },
+          borderRadius: {
+              'card': 'var(--radius-card)',
+          },
+          fontFamily: {
+            display: ["var(--font-family-display, 'Unbounded', sans-serif)"],
+            body: ["var(--font-family-body, 'Sora', sans-serif)"],
+            sans: ["var(--font-family-sans, 'Unbounded', sans-serif)"],
+          },
+          dropShadow: {
+            'glow-pink': '0 0 15px var(--color-accent-primary)',
+          },
+          keyframes: {
+             'ripple': {
+              'to': { transform: 'scale(4)', opacity: '0' },
+            },
+          },
+          animation: {
+            'ripple': 'ripple 600ms linear',
+          },
+        }
+      }
+    }
+  </script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "zod": "https://esm.sh/zod@^3.25.67",
+    "jszip": "https://esm.sh/jszip@^3.10.1",
+    "framer-motion": "https://esm.sh/framer-motion@^12.22.0",
+    "jspdf": "https://esm.sh/jspdf@^3.0.1",
+    "html2canvas": "https://esm.sh/html2canvas@^1.4.1",
+    "@testing-library/jest-dom/": "https://esm.sh/@testing-library/jest-dom@^6.6.3/",
+    "@jest/globals": "https://esm.sh/@jest/globals@^30.0.3",
+    "@testing-library/react": "https://esm.sh/@testing-library/react@^16.3.0",
+    "@testing-library/jest-dom": "https://esm.sh/@testing-library/jest-dom@^6.6.3",
+    "vite": "https://esm.sh/vite@^7.0.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^4.6.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.7.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="/src/index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>

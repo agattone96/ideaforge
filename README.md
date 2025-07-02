@@ -1,83 +1,163 @@
-# IdeaForge Local – Ascension Edition
 
-IdeaForge Local is a privacy-first, local-only ideation and project management tool for creative professionals, founders, and teams. Capture, organize, and refine your app ideas, startup concepts, or product blueprints in a beautiful, tactile interface—entirely on your device. No accounts, no cloud, no data leaves your machine.
 
-## Key Features
+# IdeaForge Local
 
-- **Local-First & Private:** All data is stored securely in your browser’s `localStorage`. Your ideas never leave your device.
-- **Project & Idea Management:** Organize your thoughts into projects (“Constellations”) and detailed ideas (“Blueprints”).
-- **Rich Editing & Attachments:** Add formatted notes, images, and files to your ideas and projects.
-- **Undo/Redo for All Changes:** Instantly undo or redo any project or idea modification, including deletions, edits, and reordering.
-- **Drag-and-Drop & Reordering:** Intuitive drag-and-drop for organizing ideas and projects (coming soon).
-- **Advanced Export & Sharing:** Export projects as PDFs, ZIPs, or shareable links. Full JSON backup and restore supported.
-- **AI Augmentation (Optional):** Generate boilerplate content and summaries for your ideas using Google Gemini (API key required).
-- **Customizable Interface:** Multiple themes, accent color selection, font scaling, high-contrast and reduced motion modes, and list density options.
-- **Accessibility:** ARIA labels, keyboard navigation, color contrast improvements, and screen reader support.
-- **Offline-Ready:** Works fully offline; all features available without an internet connection.
-- **Performance Optimized:** Code-splitting, lazy loading, and bundle optimization for fast load times.
-- **Responsive & Mobile-Friendly:** Adapts seamlessly to all device sizes.
+IdeaForge is your private brainstorming sandbox designed to capture, structure, and explore your brilliant app ideas, startup concepts, or project inspirations. All data stays on your device, ensuring complete privacy and control. No accounts, no cloud, just your ideas.
 
-## Getting Started
+## Features
 
-### Prerequisites
-- **Node.js** v18.x or later
-- **npm** v9.x or later (or `yarn`/`pnpm`)
+*   **Local-First & Private:** All data is stored in your browser's `localStorage`.
+*   **Project & Idea Management:** Organize your thoughts into Projects and detailed Ideas.
+*   **Rich Text Editing:** Format your ideas with notes and inspiration.
+*   **File Attachments:** Add images, text files, and ZIP archives to your ideas and projects.
+*   **Interactive Idea Cards:** Ideas are represented as 3D, flippable cards that reveal a quick summary on the back.
+*   **Export to PDF Report:** Create visual PDF exports of your project boards or individual ideas.
+*   **AI Augmentation (Optional):**
+    *   Generate boilerplate content for new ideas (problem, solution, features, audience).
+    *   Summarize existing idea notes.
+    *   (Requires a Google Gemini API Key)
+*   **Data Export & Backup:** Export individual ideas (Markdown + attachments), entire projects as ZIP archives, or create a full JSON backup for restoration.
+*   **Customizable Interface:**
+    *   Choose from multiple themes (Dark, Light, Cosmic).
+    *   Adjust accent colors and typography size.
+    *   Toggle high-contrast and reduced motion modes.
+    *   Switch between list densities.
+*   **Responsive Design:** Adapts to various screen sizes.
+*   **Keyboard Shortcuts:** For efficient navigation and actions.
+*   **Immersive Theming:** A cohesive aesthetic with custom animations, icons, and themes.
 
-### Installation
-1. **Clone the Repository:**
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
-2. **Install Dependencies:**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-3. **Set Up Environment Variables (Optional for AI):**
-   Create a `.env` file in the project root:
-   ```env
-   API_KEY=YOUR_GEMINI_API_KEY
-   ```
-   Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey). This is only required for AI features.
-4. **Run the Development Server:**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-   The app will be available at `http://localhost:3000` by default.
+## Prerequisites
 
-## Project Structure
-- `components/` – Reusable UI components
-- `services/` – Business logic and data services
-- `styles/` – Theme and global style definitions
-- `motion/` – Animation variants (Framer Motion)
-- `hooks/` – Custom React hooks
-- `types/` – TypeScript type definitions
-- `utils/` – Utility functions (e.g., export helpers)
-- `rendering/` – Advanced rendering (e.g., `CosmicCanvas`)
-- `__mocks__/` – Jest test mocks
-- Configuration: `jest.config.cjs`, `tsconfig.json`, `vite.config.ts`, etc.
+Before you begin, ensure you have the following installed:
+
+*   **Node.js**: Version 18.x or later recommended. (Check with `node -v`)
+*   **npm**: Version 9.x or later recommended (usually comes with Node.js). (Check with `npm -v`)
+    *   Alternatively, you can use `yarn` or `pnpm`.
+
+## Installation and Setup
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
+
+2.  **Install Dependencies:**
+    Using npm:
+    ```bash
+    npm install
+    ```
+    Or using yarn:
+    ```bash
+    yarn install
+    ```
+
+3.  **Set Up Environment Variables:**
+    The application uses `process.env.API_KEY` for the optional Gemini features. For local development with Vite, you must create an environment file to store your secret key.
+
+    Create a file named `.env` in the root of the project directory and add your API key:
+
+    ```env
+    # .env
+    API_KEY=YOUR_GEMINI_API_KEY
+    ```
+    
+    The `vite.config.ts` file is configured to load this variable and make it accessible to the application code as `process.env.API_KEY`. This file is listed in `.gitignore` and should not be committed to version control.
+
+    Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+4.  **Run the Development Server:**
+    ```bash
+    npm run dev
+    ```
+    Or using yarn:
+    ```bash
+    yarn dev
+    ```
+    This will typically start the application on `http://localhost:3000`.
+
+## Project Structure Overview
+
+A brief overview of key directories:
+
+*   **`public/`**: Contains static assets that are copied directly to the build output.
+    *   **`assets/`**: The primary folder for static assets like images (`cosmic-forge-logo-transparent.png`, `nebula-bg.jpg`).
+*   **`src/`** (or root for some files like `index.tsx`): Contains the main application source code.
+    *   **`components/`**: Reusable UI components.
+    *   **`services/`**: Modules for business logic and API interactions (e.g., `projectService.ts`, `aiService.ts`).
+    *   **`styles/`**: Global styles, theme definitions (`theme.ts`).
+    *   **`motion/`**: Animation variants and transitions for Framer Motion.
+    *   **`hooks/`**: Custom React hooks.
+    *   **`types/`**: TypeScript type definitions.
+    *   **`utils/`**: Utility functions like the `zineExporter`.
+    *   **`rendering/`**: Components or modules related to advanced rendering, like `CosmicCanvas.tsx`.
+*   **`__mocks__/`**: Directory for Jest mocks.
+*   **Configuration Files**: `jest.config.js`, `jest.setup.ts`, `.eslintrc.js`, `.prettierrc.js`, `tsconfig.json`, `vite.config.ts`, etc.
 
 ## Development Workflow
-- **Start Dev Server:** `npm run dev`
-- **Build for Production:** `npm run build`
-- **Lint:** `npm run lint`
-- **Format:** `npm run format`
-- **Test:** `npm test`
-- **Test with Coverage:** `npm test -- --coverage`
 
-## Continuous Integration
-A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, formatting, and tests on every push to ensure code quality.
+The following scripts are available for development:
+
+*   **Run Development Server:**
+    ```bash
+    npm run dev
+    ```
+    Starts the application in development mode with hot reloading.
+
+*   **Build for Production:**
+    ```bash
+    npm run build
+    ```
+    Bundles the application for production deployment into a `dist` folder.
+
+*   **Lint Code:**
+    ```bash
+    npm run lint
+    ```
+    Checks the codebase for linting errors using ESLint.
+
+*   **Check Formatting:**
+    ```bash
+    npm run format:check
+    ```
+    Checks code formatting using Prettier without making changes.
+
+*   **Format Code:**
+    ```bash
+    npm run format
+    ```
+    Automatically formats code using Prettier.
+
+*   **Run Tests:**
+    ```bash
+    npm test
+    ```
+    Runs unit and integration tests using Jest and React Testing Library.
+
+*   **Run Tests with Coverage:**
+    ```bash
+    npm test -- --coverage
+    ```
+    Runs tests and generates a code coverage report.
+
+## CI Pipeline
+
+The project includes a GitHub Actions CI pipeline defined in `.github/workflows/ci.yml`. This pipeline automatically runs on every push to the repository and performs the following checks:
+
+1.  **Code Linting:** Runs `npm run lint`.
+2.  **Code Formatting Check:** Runs `npm run format:check`.
+3.  **Tests & Coverage:** Runs `npm test -- --coverage`.
+
+The build will fail if any of these checks do not pass, ensuring code quality and adherence to project standards.
 
 ## Contributing
-Contributions are welcome! Please open an issue or pull request with your suggestions or improvements. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+(Details on how to contribute to the project, coding standards, pull request process, etc., can be added here.)
 
 ## License
-This project is licensed under the [MIT](LICENSE) license.
+
+(Specify the license for the project, e.g., MIT, Apache 2.0.)
 
 ---
 
-**IdeaForge Local** empowers you to ideate, organize, and export your creative visions—privately and efficiently. Happy forging!
+Happy Ideating!

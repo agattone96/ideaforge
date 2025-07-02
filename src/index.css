@@ -1,35 +1,127 @@
-@import "@fontsource/montserrat/700.css";
-@import "@fontsource/poppins/400.css";
-@import "@fontsource/poppins/700.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Base font size multiplier, can be changed via JS */
+  --base-font-size-multiplier: 1; 
+}
+
+html {
+  /* Apply font size scaling to the root element */
+  font-size: calc(16px * var(--base-font-size-multiplier));
+}
+
 body {
-  @apply bg-gray-50 text-gray-900;
-  background-color: #0b0c26;
-  color: #ffffff;
-  font-family: 'Poppins', sans-serif;
-  /* Ensure the app fills the viewport on mobile without blocking vertical scroll */
-  min-height: 100dvh;
+  background-color: var(--color-bg-primary, #0b0c26);
+  color: var(--color-text-primary, #ffffff);
+  font-family: var(--font-family-body, 'Poppins', sans-serif);
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Animated starfield background */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-image:
-    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(114, 9, 183, 0.3), transparent),
-    radial-gradient(ellipse 80% 80% at 10% -15%, rgba(58, 12, 163, 0.25), transparent),
-    radial-gradient(ellipse 80% 80% at 90% -15%, rgba(29, 53, 87, 0.25), transparent);
-  background-size: 200% 200%;
-  animation: background-pan 30s ease-in-out infinite;
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(var(--rgb-bg-primary), 0.5);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--rgb-accent-primary), 0.6);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--rgb-accent-primary), 0.8);
+}
+
+
+/* Neon box styling for "Enter the Forge" button */
+.neon-box {
+  border: 2px solid var(--color-accent-primary);
+  padding: 0.625rem 1.5rem; /* Matches Button 'lg' size (py-2.5 px-6) */
+  text-align: center;
+  background-color: transparent; /* Removed dark overlay */
+  border-radius: 0.375rem; /* matches 'rounded-md' */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: none; /* No glow by default */
+}
+
+.neon-box:hover, .neon-box:focus-visible {
+  box-shadow:
+    0 0 8px var(--color-accent-primary),
+    0 0 15px var(--color-accent-primary),
+    0 0 25px var(--color-accent-primary);
+  text-shadow:
+    0 0 4px var(--color-accent-primary),
+    0 0 8px var(--color-accent-primary);
+}
+
+.neon-box h1 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem; /* Matches Button 'lg' size 'text-base' */
+  line-height: 1.5rem; /* Ensure vertical alignment matches */
+  color: var(--color-accent-primary);
+  text-shadow: none; /* No glow by default */
+  margin: 0;
+  user-select: none;
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+/* Glassmorphic effect for modals and panels - NOW SOLID */
+.glassmorphic {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+}
+
+/* Help tooltip styles */
+.help-tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.help-tooltip-icon:hover + .help-tooltip-text,
+.help-tooltip-icon:focus + .help-tooltip-text {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+.help-tooltip-text {
+  position: absolute;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  transform: translateX(-50%) translateY(5px) scale(0.95);
+  background-color: var(--color-bg-accent, #2a2a3a);
+  color: var(--color-text-primary, #e0e0ff);
+  border: 1px solid var(--color-border-primary, #3a3a4a);
+  padding: 6px 12px;
+  border-radius: var(--radius-lg, 8px);
+  font-size: 0.75rem; /* text-xs */
+  font-family: var(--font-family-body);
+  width: max-content;
+  max-width: 250px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+/* High Contrast Mode Adjustments */
+html.high-contrast-mode {
+  --color-text-secondary: var(--color-text-primary) !important;
+  --color-border-primary: var(--color-text-primary) !important;
+  /* Add other high-contrast overrides as needed */
+}
+
+/* List Density Adjustments */
+[data-list-density="compact"] .blueprint-card-list-item {
+    margin-bottom: 0.5rem; /* Example: reduce margin for compact view */
 }

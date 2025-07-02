@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit Report v{{version}}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; color: #222; }
+    header, nav, article, section, aside { margin-bottom: 2rem; }
+    h1, h2, h3, h4 { color: #2c3e50; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    nav ul { list-style: none; padding-left: 0; }
+    nav li { margin-bottom: 0.5rem; }
+    ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .severity-critical { color: #e74c3c; font-weight: bold; }
+    .severity-high { color: #e67e22; font-weight: bold; }
+    .severity-medium { color: #f1c40f; font-weight: bold; }
+    .severity-low { color: #2ecc71; font-weight: bold; }
+    pre { background: #eee; padding: 1rem; overflow-x: auto; }
+    time { font-size: 0.9em; color: #666; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Audit Report v{{version}}</h1>
+    <p><strong>Date:</strong> <time datetime="{{date}}">{{date}}</time></p>
+    <p><strong>Author:</strong> {{author}}</p>
+  </header>
+
+  <nav>
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#scope-objectives">Scope &amp; Objectives</a></li>
+      <li><a href="#issues-found">Issues Found</a></li>
+      <li><a href="#suggestions-fixes">Suggestions &amp; Fixes</a></li>
+      <li><a href="#samples">Code or UI Samples</a></li>
+      <li><a href="#status">Status</a></li>
+    </ul>
+  </nav>
+
+  <article>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p><!-- Insert overview of audit here --></p>
+    </section>
+
+    <section id="scope-objectives">
+      <h2>Scope &amp; Objectives</h2>
+      <ul>
+        <!-- List audit scope and objectives here -->
+        <li></li>
+      </ul>
+    </section>
+
+    <section id="issues-found">
+      <h2>Issues Found</h2>
+      <h3 class="severity-critical">🔴 Critical</h3>
+      <ul>
+        <!-- Critical issues -->
+        <li></li>
+      </ul>
+      <h3 class="severity-high">🟠 High</h3>
+      <ul>
+        <!-- High issues -->
+        <li></li>
+      </ul>
+      <h3 class="severity-medium">🟡 Medium</h3>
+      <ul>
+        <!-- Medium issues -->
+        <li></li>
+      </ul>
+      <h3 class="severity-low">🟢 Low</h3>
+      <ul>
+        <!-- Low issues -->
+        <li></li>
+      </ul>
+    </section>
+
+    <section id="suggestions-fixes">
+      <h2>Suggestions &amp; Fixes</h2>
+      <ul>
+        <!-- Recommendation list -->
+        <li></li>
+      </ul>
+    </section>
+
+    <section id="samples">
+      <h2>Code or UI Samples</h2>
+      <pre><code>
+        <!-- Include sample code or screenshots -->
+      </code></pre>
+    </section>
+
+    <section id="status">
+      <h2>Status</h2>
+      <p><!-- Current status and next steps --></p>
+    </section>
+  </article>
+</body>
+</html>

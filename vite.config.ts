@@ -1,7 +1,4 @@
-/// <reference types="node" />
-
 import { defineConfig, loadEnv } from 'vite';
-import path from 'path';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
@@ -11,15 +8,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, 'src')
-      }
-    },
     define: {
       // Expose environment variables to the client.
       // This makes `process.env.API_KEY` available in the code.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY ?? '')
+      'process.env.API_KEY': JSON.stringify(env.API_KEY)
     },
     // Server configuration for development
     server: {
@@ -33,5 +25,3 @@ export default defineConfig(({ mode }) => {
     },
   }
 });
-
-// TODO: manual fix required – vite.config.ts is empty. Add Vite configuration for React, TypeScript, and Tailwind. See Vite docs for recommended setup.

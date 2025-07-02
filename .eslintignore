@@ -1,0 +1,5 @@
+# ESLint ignore patterns
+node_modules/
+dist/
+coverage/
+public/

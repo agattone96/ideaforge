@@ -1,6 +1,6 @@
 {
-  "name": "test of IdeaForge",
-  "description": "Your personal nebula for brainstorming. Capture, shape, and explore stellar ideas—all tethered to your local starmap (browser storage).",
+  "name": "IdeaForge",
+  "description": "Your personal space for brainstorming. Capture, shape, and explore your best ideas—all saved securely on your device.",
   "requestFramePermissions": [],
   "prompt": ""
 }

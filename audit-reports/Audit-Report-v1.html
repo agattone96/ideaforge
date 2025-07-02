@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit Report v1</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; color: #222; }
+    header, nav, article, section, aside { margin-bottom: 2rem; }
+    h1, h2, h3, h4 { color: #2c3e50; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    nav ul { list-style: none; padding-left: 0; }
+    nav li { margin-bottom: 0.5rem; }
+    ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .keywords { list-style: none; padding: 0; margin: 0.5rem 0; }
+    .keywords li { display: inline; margin-right: 1rem; font-size: 0.9em; color: #555; }
+    .severity-critical { color: #e74c3c; font-weight: bold; }
+    .severity-high { color: #e67e22; font-weight: bold; }
+    .severity-medium { color: #f1c40f; font-weight: bold; }
+    .severity-low { color: #2ecc71; font-weight: bold; }
+    pre { background: #eee; padding: 1rem; overflow-x: auto; }
+    time { font-size: 0.9em; color: #666; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Audit Report v1</h1>
+    <p><strong>Date:</strong> <time datetime="2025-07-02">2025-07-02</time></p>
+    <p><strong>Author:</strong> Allison Gattone</p>
+  </header>
+
+  <nav>
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#scope-objectives">Scope &amp; Objectives</a></li>
+      <li><a href="#issues-found">Issues Found</a></li>
+      <li><a href="#suggestions-fixes">Suggestions &amp; Fixes</a></li>
+      <li><a href="#samples">Code or UI Samples</a></li>
+      <li><a href="#status">Status</a></li>
+    </ul>
+  </nav>
+
+  <article>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>This initial audit evaluates production readiness and design structure of IdeaForge, covering build processes, testing coverage, security, and folder organization.</p>
+    </section>
+
+    <section id="scope-objectives">
+      <h2>Scope &amp; Objectives</h2>
+      <ul>
+        <li>Validate build and deployment configurations.</li>
+        <li>Assess testing strategies and coverage.</li>
+        <li>Identify security gaps and input validation needs.</li>
+        <li>Review project architecture and folder structure.</li>
+      </ul>
+    </section>
+
+    <section id="issues-found">
+      <h2>Issues Found</h2>
+      <h3 class="severity-critical">🔴 Critical</h3>
+      <ul>
+        <li>Missing automated end-to-end and accessibility tests.</li>
+      </ul>
+      <h3 class="severity-high">🟠 High</h3>
+      <ul>
+        <li>No Docker support for consistent production deployment.</li>
+      </ul>
+      <h3 class="severity-medium">🟡 Medium</h3>
+      <ul>
+        <li>Partial input validation implemented; requires comprehensive schema enforcement.</li>
+      </ul>
+      <h3 class="severity-low">🟢 Low</h3>
+      <ul>
+        <li>Inconsistent folder naming between <code>motion/</code> and <code>rendering/</code> directories.</li>
+      </ul>
+    </section>
+
+    <section id="suggestions-fixes">
+      <h2>Suggestions &amp; Fixes</h2>
+      <ul>
+        <li>Implement end-to-end tests using Playwright or Cypress.</li>
+        <li>Create Dockerfile and .dockerignore for containerized deployment.</li>
+        <li>Enforce full input validation with <code>zod</code> schemas for all API endpoints.</li>
+        <li>Standardize folder structure; merge related directories under <code>src/</code>.</li>
+      </ul>
+    </section>
+
+    <section id="samples">
+      <h2>Code or UI Samples</h2>
+      <pre><code>// Example zod schema for input validation
+import { z } from 'zod';
+
+const IdeaSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+});
+
+export type Idea = z.infer<typeof IdeaSchema>;
+      </code></pre>
+    </section>
+
+    <section id="status">
+      <h2>Status</h2>
+      <p>Critical issues need immediate attention. High and medium items are scheduled for the next release cycle.</p>
+    </section>
+  </article>
+</body>
+</html>
