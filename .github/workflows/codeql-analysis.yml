@@ -1,3 +1,4 @@
+# Documentation: https://github.com/agattone96/ideaforge/blob/main/README.md#continuous-integration
 name: CodeQL Analysis
 
 on:
@@ -6,12 +7,10 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 2 * * 0'   # Weekly on Sunday at 02:00 UTC
-
+    - cron: '0 2 * * 0'  # every Sunday at 02:00 UTC
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: codeql-${{ github.ref }}
   cancel-in-progress: true
-
 permissions:
   actions: read
   contents: read
@@ -28,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
@@ -40,3 +39,6 @@ jobs:
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v2
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v2
