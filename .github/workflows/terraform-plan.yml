@@ -1,0 +1,32 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructure/**/*.tf'
+
+jobs:
+  plan:
+    name: Generate Terraform Plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout infra
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: '1.5.0'
+
+      - name: Terraform init
+        run: terraform init -backend=false
+
+      - name: Terraform plan
+        run: terraform plan -no-color -out=tfplan.binary
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan.binary
