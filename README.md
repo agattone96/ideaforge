@@ -47,6 +47,13 @@ Before you begin, ensure you have the following installed:
     ```bash
     npm install
     ```
+    If the `run_in_bash_session` tool fails due to the large number of files created
+    by `npm install`, you can install packages into a temporary directory and
+    symlink `node_modules` back into the repository:
+
+    ```bash
+    scripts/setup-temp-node-modules.sh
+    ```
     Or using yarn:
     ```bash
     yarn install
