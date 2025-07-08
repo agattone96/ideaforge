@@ -175,10 +175,11 @@ const IdeaEditor: React.FC<IdeaEditorProps> = ({ project, ideaToEdit, onSave, on
           const zipFileEntries = Object.values(zip.files).filter((f:any) => !f.dir);
           const currentZipAttachments: Attachment[] = [];
           for (const entry of zipFileEntries) {
+            const entryBlob = await (entry as any).async('blob');
             const entryFile = new File(
-              [await (entry as any).async('blob')],
+              [entryBlob],
               (entry as any).name,
-              { type: (await (entry as any).async('blob')).type },
+              { type: entryBlob.type },
             );
             try {
               const attachment = await processFile(entryFile);
