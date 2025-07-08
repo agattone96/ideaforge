@@ -128,6 +128,18 @@ describe('IdeaEditor Component', () => {
     expect(mockAddNotification).toHaveBeenCalledWith(`Transmitting Blueprint "${sampleIdeaToEdit.title}" beyond the forge...`, 'success');
   });
 
+  test('shows error notification when exportIdea fails', async () => {
+    (fileService.exportIdea as jest.MockedFunction<typeof fileService.exportIdea>).mockRejectedValueOnce(new Error('fail'));
+    renderEditor(sampleIdeaToEdit);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Export Blueprint/i }));
+    });
+    expect(mockAddNotification).toHaveBeenCalledWith(
+      `Transmission error. Blueprint "${sampleIdeaToEdit.title}" remains in the forge.`,
+      'error',
+    );
+  });
+
   test('AI boilerplate generation button interaction', async () => {
     (localStorageService.generateIdeaBoilerplate as jest.Mock<() => Promise<IdeaBoilerplate>>).mockResolvedValueOnce({
       problemSolved: 'Generated Problem', coreSolution: 'Generated Solution', keyFeatures: '', targetAudience: ''

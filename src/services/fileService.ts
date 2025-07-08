@@ -1,6 +1,6 @@
 
 import JSZip from 'jszip';
-import { Idea, Project } from '@/types';
+import { Idea, Project, Result } from '@/types';
 
 // Helper to convert Base64 to Blob
 export const base64ToBlob = (base64: string, type = 'application/octet-stream'): Blob => {
@@ -74,11 +74,25 @@ export const exportIdea = async (idea: Idea): Promise<void> => {
       }
       
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadFile(`${baseFilename}_${timestamp}.zip`, URL.createObjectURL(zipBlob), 'application/zip');
+      const dlResult = downloadFile(
+        `${baseFilename}_${timestamp}.zip`,
+        URL.createObjectURL(zipBlob),
+        'application/zip',
+      );
+      if (!dlResult.success) {
+        throw dlResult.error;
+      }
     } else {
       // No attachments, just download Markdown
       const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-      downloadFile(markdownFilename, URL.createObjectURL(blob), 'text/markdown;charset=utf-8');
+      const dlResult = downloadFile(
+        markdownFilename,
+        URL.createObjectURL(blob),
+        'text/markdown;charset=utf-8',
+      );
+      if (!dlResult.success) {
+        throw dlResult.error;
+      }
     }
   } catch (error) {
     console.error("Error exporting idea:", error);
@@ -125,7 +139,14 @@ export const exportProjectAsZip = async (project: Project): Promise<void> => {
 
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const timestamp = formatDateForFilename(new Date());
-    downloadFile(`${projectBaseFilename}_${timestamp}.zip`, URL.createObjectURL(zipBlob), 'application/zip');
+    const dlResult = downloadFile(
+      `${projectBaseFilename}_${timestamp}.zip`,
+      URL.createObjectURL(zipBlob),
+      'application/zip',
+    );
+    if (!dlResult.success) {
+      throw dlResult.error;
+    }
   } catch (error) {
     console.error("Error exporting project:", error);
     throw new Error(`Failed to export project "${project.name}": ${error instanceof Error ? error.message : String(error)}`);
@@ -133,7 +154,11 @@ export const exportProjectAsZip = async (project: Project): Promise<void> => {
 };
 
 
-const downloadFile = (filename: string, href: string, mimeType?: string): void => {
+const downloadFile = (
+  filename: string,
+  href: string,
+  mimeType?: string,
+): Result<void> => {
   try {
     const link = document.createElement('a');
     link.href = href;
@@ -143,10 +168,11 @@ const downloadFile = (filename: string, href: string, mimeType?: string): void =
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(href); // Clean up
+    return { success: true, data: undefined };
   } catch (error) {
-    console.error("Error in downloadFile utility:", error);
-    // This error won't be easily caught by calling functions unless re-thrown,
-    // but it's important for debugging.
+    console.error('Error in downloadFile utility:', error);
+    const err = error instanceof Error ? error : new Error(String(error));
+    return { success: false, error: err };
   }
 };
 

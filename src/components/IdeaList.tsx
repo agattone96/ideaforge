@@ -130,9 +130,14 @@ const IdeaList: React.FC<IdeaListProps> = ({ project, onEditIdea, onCreateNewIde
 
     for (const file of Array.from(files)) {
         // No ZIP processing for project-level attachments for simplicity, direct file attachment
-        const attachment = await processProjectFile(file);
-        if (attachment) {
-            newProjectAttachmentsBatch.push(attachment);
+        try {
+            const attachment = await processProjectFile(file);
+            if (attachment) {
+                newProjectAttachmentsBatch.push(attachment);
+            }
+        } catch (err) {
+            console.error('Project file process error:', err);
+            addNotification(`Failed to process ${file.name}.`, 'error');
         }
     }
     

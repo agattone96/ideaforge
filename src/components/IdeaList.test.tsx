@@ -141,7 +141,20 @@ describe('IdeaList Component', () => {
         fireEvent.click(exportButton);
     });
     expect(fileService.exportProjectAsZip).toHaveBeenCalledWith(sampleProject);
-    expect(mockAddNotification).toHaveBeenCalledWith(`Constellation "${sampleProject.name}" export initiated.`, 'success');
+    expect(mockAddNotification).toHaveBeenCalledWith(`Constellation "${sampleProject.name}" export (ZIP) initiated.`, 'success');
+  });
+
+  test('shows error notification when project export fails', async () => {
+    (fileService.exportProjectAsZip as jest.MockedFunction<typeof fileService.exportProjectAsZip>).mockRejectedValueOnce(new Error('boom'));
+    renderIdeaList(sampleProject);
+    const exportButton = screen.getByRole('button', { name: /Export Project/i });
+    await act(async () => {
+      fireEvent.click(exportButton);
+    });
+    expect(mockAddNotification).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to export constellation'),
+      'error',
+    );
   });
 
   test('handles project logo upload and removal', async () => {

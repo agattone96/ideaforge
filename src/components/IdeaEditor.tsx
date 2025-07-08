@@ -175,21 +175,45 @@ const IdeaEditor: React.FC<IdeaEditorProps> = ({ project, ideaToEdit, onSave, on
           const zipFileEntries = Object.values(zip.files).filter((f:any) => !f.dir);
           const currentZipAttachments: Attachment[] = [];
           for (const entry of zipFileEntries) {
-            const entryFile = new File([await (entry as any).async('blob')], (entry as any).name, {type: (await (entry as any).async('blob')).type});
-            const attachment = await processFile(entryFile);
-            if (attachment) {
-                 if (attachment.type === 'text') aggregatedNotesUpdate += `\n\n--- Appended from ${attachment.name} (in ${file.name}) ---\n${attachment.content}`;
-                 currentZipAttachments.push(attachment);
+            const entryFile = new File(
+              [await (entry as any).async('blob')],
+              (entry as any).name,
+              { type: (await (entry as any).async('blob')).type },
+            );
+            try {
+              const attachment = await processFile(entryFile);
+              if (attachment) {
+                if (attachment.type === 'text') {
+                  aggregatedNotesUpdate += `\n\n--- Appended from ${attachment.name} (in ${file.name}) ---\n${attachment.content}`;
+                }
+                currentZipAttachments.push(attachment);
+              }
+            } catch (err) {
+              console.error('File process error:', err);
+              addNotification(
+                `Failed to process ${entryFile.name} from ${file.name}.`,
+                'error',
+              );
             }
           }
           newAttachmentsBatch.push(...currentZipAttachments); 
           addNotification(`Unpacked ${currentZipAttachments.length} artifacts from ${file.name}'s dimensional pouch.`, 'success');
         } catch (err) { console.error("ZIP Error:", err); addNotification(`Dimensional pouch for ${file.name} seems corrupted. Could not unpack.`, 'error'); }
       } else {
-        const attachment = await processFile(file);
-        if (attachment) {
-          if (attachment.type === 'text') aggregatedNotesUpdate += `\n\n--- Appended from ${attachment.name} ---\n${attachment.content}`;
-          newAttachmentsBatch.push(attachment);
+        try {
+          const attachment = await processFile(file);
+          if (attachment) {
+            if (attachment.type === 'text') {
+              aggregatedNotesUpdate += `\n\n--- Appended from ${attachment.name} ---\n${attachment.content}`;
+            }
+            newAttachmentsBatch.push(attachment);
+          }
+        } catch (err) {
+          console.error('File process error:', err);
+          addNotification(
+            `Failed to process ${file.name}.`,
+            'error',
+          );
         }
       }
     }

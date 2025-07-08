@@ -41,6 +41,10 @@ export interface NotificationType {
   type: 'success' | 'error' | 'info';
 }
 
+export type Result<T> =
+  | { success: true; data: T }
+  | { success: false; error: Error };
+
 // For sample project data structure (optional, can be inline)
 export interface SampleIdea extends Omit<Idea, 'id' | 'createdAt' | 'updatedAt' | 'attachments' | 'logo'> {
   attachments?: Omit<Attachment, 'id'>[];
